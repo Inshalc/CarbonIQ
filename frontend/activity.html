@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CarbonIQ – Activity</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1b13;
+      --surface: #0f2a1e;
+      --accent: #22c55c;
+      --accent-light: #93e9a9;
+      --text: #ecf4ef;
+      --muted: #9fb6a8;
+      --light-text: #c8dad0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background-color: var(--surface) !important;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .navbar-brand {
+      color: var(--text) !important;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-icon {
+      font-size: 1.5rem;
+      margin-right: 0.5rem;
+      color: var(--accent);
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: var(--bg);
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background-color: var(--accent-light);
+      border-color: var(--accent-light);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(34, 197, 92, 0.4);
+    }
+
+    .btn-outline {
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+    .btn-outline:hover {
+      background-color: var(--accent);
+      color: var(--bg);
+    }
+
+    .card {
+      background-color: var(--surface);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: transform 0.3s ease;
+      height: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(34, 197, 92, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      color: var(--accent);
+      font-size: 1.5rem;
+    }
+
+    .card-title {
+      color: var(--accent-light);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+
+    .form-label {
+      color: var(--text) !important;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .input-control {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+    }
+    .input-control:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent);
+      color: var(--text);
+      box-shadow: 0 0 0 0.25rem rgba(34, 197, 92, 0.25);
+    }
+    .input-control::placeholder {
+      color: var(--muted);
+    }
+
+    .form-control.input-control {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text);
+    }
+    
+    .form-control.input-control option {
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .form-text {
+      color: var(--light-text) !important;
+      font-size: 0.875rem;
+    }
+
+    .page-title {
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .kpi-value {
+      color: var(--accent-light);
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background-color: var(--accent);
+      color: var(--bg);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .category-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+      border-left: 3px solid var(--accent);
+    }
+
+    .category-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .category-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(34, 197, 92, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      color: var(--accent);
+    }
+
+    .alert-success {
+      background-color: rgba(34, 197, 92, 0.1);
+      border-color: rgba(34, 197, 92, 0.3);
+      color: var(--accent-light);
+    }
+
+    .alert-danger {
+      background-color: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    .co2-preview {
+      background: rgba(34, 197, 92, 0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      border-left: 3px solid var(--accent);
+      color: var(--text);
+    }
+
+    .activity-item {
+      color: var(--text);
+      padding: 0.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-name {
+      color: var(--accent-light);
+      font-weight: 500;
+    }
+
+    .activity-details {
+      color: var(--light-text);
+      font-size: 0.9rem;
+    }
+
+    .activity-date {
+      color: var(--light-text);
+      font-size: 0.8rem;
+    }
+
+    .co2-badge {
+      background: var(--accent);
+      color: var(--bg);
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .table {
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.1);
+      background-color: var(--surface);
+    }
+    
+    .table th {
+      border-color: rgba(255, 255, 255, 0.1);
+      color: var(--accent-light);
+      font-weight: 600;
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 0.75rem;
+    }
+    
+    .table td {
+      border-color: rgba(255, 255, 255, 0.05);
+      vertical-align: middle;
+      color: var(--text);
+      background-color: var(--surface);
+      padding: 0.75rem;
+    }
+    
+    .table-hover tbody tr:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+    
+    .table-hover tbody tr:hover td {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+    
+    .table-responsive {
+      background-color: var(--surface);
+      border-radius: 8px;
+    }
+    
+    #activitiesTable {
+      background-color: var(--surface);
+      margin-bottom: 0;
+    }
+    
+    #activitiesTable thead tr {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    #activitiesTable tbody tr {
+      background-color: var(--surface);
+    }
+    
+    #activitiesTable tbody tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+    
+    #activitiesTable tbody tr:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .text-muted {
+      color: var(--light-text) !important;
+    }
+
+    .text-danger {
+      color: #fca5a5 !important;
+    }
+
+    .text-success {
+      color: var(--accent-light) !important;
+    }
+
+    .text-center {
+      color: var(--text);
+    }
+  .fw-semibold {
+      color: var(--text);
+    }
+
+    small {
+      color: var(--light-text);
+    }
+
+    .subtext {
+      color: var(--light-text);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar px-4 py-3 mb-4">
+    <div class="d-flex align-items-center">
+      <div class="logo-icon">
+        <i class="fas fa-leaf"></i>
+      </div>
+      <a class="navbar-brand" href="dashboard.html">CarbonIQ</a>
+    </div>
+    <div class="ms-auto">
+      <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <main class="container py-4">
+    <div class="row">
+      <div class="col-lg-8">
+        <h2 class="page-title mb-4">Log Activity</h2>
+
+        <form id="activityForm" class="card p-4 mb-4">
+          <div class="mb-3">
+            <label class="form-label">Select Activity Type</label>
+            <select id="activityType" class="form-control input-control">
+              <option value="">Choose a common activity (optional)</option>
+              <option value="drive_car">Drive Car (Gasoline)</option>
+              <option value="take_bus">Take Bus</option>
+              <option value="eat_beef">Eat Beef Meal</option>
+              <option value="eat_chicken">Eat Chicken Meal</option>
+              <option value="eat_vegetarian">Eat Vegetarian Meal</option>
+              <option value="use_electricity">Use Electricity</option>
+              <option value="home_heating">Home Heating (Gas)</option>
+              <option value="buy_clothes">Buy New Clothes</option>
+              <option value="recycle_paper">Recycle Paper</option>
+              <option value="take_shower">Take Shower</option>
+            </select>
+            <div class="form-text text-muted">Selecting an activity will auto-calculate CO2 emissions</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select id="category" class="form-control input-control" required>
+              <option value="">Select category</option>
+              <option value="1">Transportation</option>
+              <option value="2">Diet</option>
+              <option value="3">Energy</option>
+              <option value="4">Shopping</option>
+              <option value="5">Waste</option>
+              <option value="6">Water Use</option>
+              <option value="7">Travel</option>
+              <option value="8">Work/Office</option>
+              <option value="9">Home</option>
+              <option value="10">Community</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Activity Name</label>
+            <input id="activityName" class="form-control input-control" placeholder="e.g., Drive Car 10 km" required>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Quantity</label>
+              <input id="quantity" type="number" class="form-control input-control" placeholder="e.g., 10" step="0.1" min="0">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Unit</label>
+              <input id="unit" class="form-control input-control" placeholder="e.g., km, meal, kWh" required>
+            </div>
+          </div>
+
+          <div id="co2Preview" class="co2-preview" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <strong>Estimated CO2 Emission:</strong>
+                <div id="co2Value" class="kpi-value">0 kg</div>
+              </div>
+              <div class="text-muted small" id="co2Calculation"></div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Emission (kg CO2e)</label>
+            <input id="co2" type="number" step="0.01" class="form-control input-control" placeholder="e.g., 2.3" required>
+            <div class="form-text text-muted">This will be auto-calculated when you select an activity type</div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Date</label>
+            <input id="date" type="date" class="form-control input-control" required>
+          </div>
+
+          <button class="btn btn-primary w-100 py-2">
+            <i class="fas fa-plus-circle me-2"></i>Add Activity
+          </button>
+        </form>
+
+        <div class="card p-4 mb-4">
+          <h5 class="card-title mb-3">Search & Filter Activities</h5>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Search Activities</label>
+              <div class="input-group">
+                <input type="text" class="form-control input-control" id="searchInput" placeholder="Search by name...">
+                <button class="btn btn-outline" type="button" id="searchButton">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="col-md-3">
+              <label class="form-label">Category</label>
+              <select class="form-control input-control" id="categoryFilter">
+                <option value="">All Categories</option>
+                <option value="1">Transportation</option>
+                <option value="2">Diet</option>
+                <option value="3">Energy</option>
+                <option value="4">Shopping</option>
+                <option value="5">Waste</option>
+                <option value="6">Water Use</option>
+                <option value="7">Travel</option>
+                <option value="8">Work/Office</option>
+                <option value="9">Home</option>
+                <option value="10">Community</option>
+              </select>
+            </div>
+            
+            <div class="col-md-3">
+              <label class="form-label">Date Range</label>
+              <select class="form-control input-control" id="dateFilter">
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="custom">Custom Range</option>
+              </select>
+            </div>
+            
+            <div class="col-md-2 d-flex align-items-end">
+              <button class="btn btn-outline w-100 me-2" id="resetFilters">
+                <i class="fas fa-refresh me-2"></i>Reset
+              </button>
+            </div>
+          </div>
+
+          <div class="row mt-3" id="customDateRange" style="display: none;">
+            <div class="col-md-6">
+              <label class="form-label">From Date</label>
+              <input type="date" class="form-control input-control" id="startDate">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">To Date</label>
+              <input type="date" class="form-control input-control" id="endDate">
+            </div>
+          </div>
+        </div>
+
+        <div class="card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title mb-0">Your Activities</h5>
+            <div class="d-flex align-items-center">
+              <span class="me-2">Sort by:</span>
+              <select class="form-control input-control form-select-sm" id="sortBy" style="width: auto;">
+                <option value="date-desc">Newest First</option>
+                <option value="date-asc">Oldest First</option>
+                <option value="emission-desc">Highest Emission</option>
+                <option value="emission-asc">Lowest Emission</option>
+                <option value="name">Name A-Z</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="table table-hover" id="activitiesTable">
+              <thead>
+                <tr>
+                  <th>Activity</th>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th>Emissions (kg CO2e)</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="activitiesList">
+              </tbody>
+            </table>
+          </div>
+          
+          <div id="emptyState" class="text-center py-5" style="display: none;">
+            <i class="fas fa-clipboard-list fa-3x mb-3" style="color: var(--muted);"></i>
+            <h5>No activities found</h5>
+            <p class="text-muted">Try adjusting your filters or add a new activity.</p>
+            <button class="btn btn-primary" onclick="scrollToForm()">
+              <i class="fas fa-plus me-2"></i>Add Your First Activity
+            </button>
+          </div>
+
+          <div id="loadingState" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Loading activities...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card p-4 h-100">
+          <div class="card-icon">
+            <i class="fas fa-history"></i>
+          </div>
+          <h5 class="card-title">Recent Activities</h5>
+          <div id="recentActivityList" class="mb-3">
+          </div>
+          <div class="mt-auto">
+            <button class="btn btn-outline w-100" onclick="location.href='report.html'">
+              <i class="fas fa-chart-bar me-2"></i>View Reports
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script src="js/api-config.js"></script>
+  <script>
+    const user = requireAuth();
+    let allActivities = [];
+
+    function handleAPIError(error, context = '') {
+        console.error(`Error in ${context}:`, error);
+        showAlert(`Failed to ${context}. Please try again.`, 'error');
+    }
+
+    const activityTemplates = {
+      'drive_car': { name: 'Drive Car', category: '1', unit: 'km', co2PerUnit: 0.23, description: 'Gasoline car travel' },
+      'take_bus': { name: 'Take Bus', category: '1', unit: 'km', co2PerUnit: 0.08, description: 'Public bus transportation' },
+      'eat_beef': { name: 'Eat Beef Meal', category: '2', unit: 'meal', co2PerUnit: 27, description: 'Beef-based meal' },
+      'eat_chicken': { name: 'Eat Chicken Meal', category: '2', unit: 'meal', co2PerUnit: 6.9, description: 'Chicken-based meal' },
+      'eat_vegetarian': { name: 'Eat Vegetarian Meal', category: '2', unit: 'meal', co2PerUnit: 2.5, description: 'Plant-based meal' },
+      'use_electricity': { name: 'Use Electricity', category: '3', unit: 'kWh', co2PerUnit: 0.5, description: 'Grid electricity consumption' },
+      'home_heating': { name: 'Home Heating', category: '3', unit: 'hour', co2PerUnit: 0.2, description: 'Home heating with natural gas' },
+      'buy_clothes': { name: 'Buy New Clothes', category: '4', unit: 'item', co2PerUnit: 15, description: 'New clothing purchase' },
+      'recycle_paper': { name: 'Recycle Paper', category: '5', unit: 'kg', co2PerUnit: -0.8, description: 'Paper recycling (negative emission)' },
+      'take_shower': { name: 'Take Shower', category: '6', unit: 'minute', co2PerUnit: 0.05, description: 'Hot water shower' }
+    };
+
+    document.getElementById('date').valueAsDate = new Date();
+
+    document.getElementById('activityType').addEventListener('change', function(e) {
+      const selectedType = this.value;
+      const quantityInput = document.getElementById('quantity');
+      const co2Input = document.getElementById('co2');
+      const co2Preview = document.getElementById('co2Preview');
+      const co2Value = document.getElementById('co2Value');
+      const co2Calculation = document.getElementById('co2Calculation');
+      
+      if (selectedType && activityTemplates[selectedType]) {
+        const template = activityTemplates[selectedType];
+        
+        document.getElementById('category').value = template.category;
+        document.getElementById('unit').value = template.unit;
+        document.getElementById('activityName').value = template.name;
+        
+        quantityInput.oninput = function() {
+          const quantity = parseFloat(this.value) || 0;
+          const co2 = template.co2PerUnit * quantity;
+          co2Input.value = co2.toFixed(2);
+          
+          co2Preview.style.display = 'block';
+          co2Value.textContent = `${co2.toFixed(2)} kg CO2e`;
+          co2Calculation.textContent = `${quantity} ${template.unit} × ${template.co2PerUnit} kg/${template.unit}`;
+        };
+        
+        if (quantityInput.value) {
+          quantityInput.oninput();
+        }
+      } else {
+        quantityInput.oninput = null;
+        co2Preview.style.display = 'none';
+      }
+    });
+
+    document.getElementById('quantity').addEventListener('input', function() {
+      const activityType = document.getElementById('activityType').value;
+      if (!activityType) {
+        const quantity = parseFloat(this.value) || 0;
+      }
+    });
+
+    function filterActivities() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const categoryFilter = document.getElementById('categoryFilter').value;
+      const dateFilter = document.getElementById('dateFilter').value;
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      const sortBy = document.getElementById('sortBy').value;
+
+      let filteredActivities = [...allActivities];
+
+      if (searchTerm) {
+        filteredActivities = filteredActivities.filter(activity => 
+          activity.name.toLowerCase().includes(searchTerm) ||
+          (activity.description && activity.description.toLowerCase().includes(searchTerm))
+        );
+      }
+
+      if (categoryFilter) {
+        filteredActivities = filteredActivities.filter(activity => 
+          activity.category_id === parseInt(categoryFilter)
+        );
+      }
+
+      if (dateFilter !== 'all') {
+        const now = new Date();
+        filteredActivities = filteredActivities.filter(activity => {
+          const activityDate = new Date(activity.date);
+          
+          switch(dateFilter) {
+            case 'today':
+              return activityDate.toDateString() === now.toDateString();
+            case 'week':
+              const weekAgo = new Date(now);
+              weekAgo.setDate(weekAgo.getDate() - 7);
+              return activityDate >= weekAgo;
+            case 'month':
+              const monthAgo = new Date(now);
+              monthAgo.setMonth(monthAgo.getMonth() - 1);
+              return activityDate >= monthAgo;
+            case 'custom':
+              if (startDate && endDate) {
+                return activityDate >= new Date(startDate) && activityDate <= new Date(endDate);
+              }
+              return true;
+            default:
+              return true;
+          }
+        });
+      }
+
+      filteredActivities.sort((a, b) => {
+        switch(sortBy) {
+          case 'date-desc':
+            return new Date(b.date) - new Date(a.date);
+          case 'date-asc':
+            return new Date(a.date) - new Date(b.date);
+          case 'emission-desc':
+            return b.co2 - a.co2;
+          case 'emission-asc':
+            return a.co2 - b.co2;
+          case 'name':
+            return a.name.localeCompare(b.name);
+          default:
+            return 0;
+        }
+      });
+
+      displayActivities(filteredActivities);
+    }
+
+    function displayActivities(activities) {
+      const activitiesList = document.getElementById('activitiesList');
+      const emptyState = document.getElementById('emptyState');
+      const loadingState = document.getElementById('loadingState');
+
+      loadingState.style.display = 'none';
+
+      if (activities.length === 0) {
+        activitiesList.innerHTML = '';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      
+      activitiesList.innerHTML = activities.map(activity => {
+        const category = MockDB.categories.find(c => c.id === activity.category_id);
+        const date = new Date(activity.date).toLocaleDateString();
+        
+        return `
+          <tr>
+            <td>
+              <div class="fw-semibold">${activity.name}</div>
+              <small class="text-muted">${activity.description || ''}</small>
+            </td>
+            <td>
+              <span class="tag">${category?.name || 'Unknown'}</span>
+            </td>
+            <td>${date}</td>
+            <td class="fw-bold" style="color: var(--accent-light);">${activity.co2} kg</td>
+            <td>
+              <button class="btn btn-sm btn-outline" onclick="editActivity(${activity.id})">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-sm btn-outline ms-1" onclick="deleteActivity(${activity.id})">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function loadRecentActivities() {
+      const list = document.getElementById('recentActivityList');
+      
+      if (allActivities.length === 0) {
+        list.innerHTML = '<div class="text-muted text-center py-4">No activities yet<br><small>Start by adding your first activity</small></div>';
+        return;
+      }
+
+      list.innerHTML = allActivities.slice(-5).reverse().map(a => {
+        const category = MockDB.categories.find(c => c.id === a.category_id);
+        return `
+          <div class="activity-item">
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              <div class="activity-name">${a.name}</div>
+              <span class="co2-badge">${a.co2} kg</span>
+            </div>
+            <div class="activity-details">
+              ${a.quantity} ${a.unit} • ${category?.name || 'Unknown'}
+            </div>
+            <div class="activity-date">${a.date}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    document.getElementById('searchInput').addEventListener('input', filterActivities);
+    document.getElementById('categoryFilter').addEventListener('change', filterActivities);
+    document.getElementById('dateFilter').addEventListener('change', function() {
+      const customRange = document.getElementById('customDateRange');
+      customRange.style.display = this.value === 'custom' ? 'block' : 'none';
+      filterActivities();
+    });
+    document.getElementById('startDate').addEventListener('change', filterActivities);
+    document.getElementById('endDate').addEventListener('change', filterActivities);
+    document.getElementById('sortBy').addEventListener('change', filterActivities);
+    document.getElementById('resetFilters').addEventListener('click', resetFilters);
+
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('categoryFilter').value = '';
+      document.getElementById('dateFilter').value = 'all';
+      document.getElementById('startDate').value = '';
+      document.getElementById('endDate').value = '';
+      document.getElementById('sortBy').value = 'date-desc';
+      document.getElementById('customDateRange').style.display = 'none';
+      filterActivities();
+    }
+
+    function scrollToForm() {
+      document.getElementById('activityForm').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    document.getElementById('activityForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const activityType = document.getElementById('activityType').value;
+      const activityName = document.getElementById('activityName').value;
+      const categoryId = document.getElementById('category').value;
+      const quantity = parseFloat(document.getElementById('quantity').value);
+      const unit = document.getElementById('unit').value;
+      const co2 = parseFloat(document.getElementById('co2').value);
+      const date = document.getElementById('date').value;
+      
+      if (!activityName || !categoryId || !quantity || !unit || !co2 || !date) {
+        showAlert('Please fill in all required fields.', 'error');
+        return;
+      }
+      
+      const payload = {
+        user_id: user.id,
+        category_id: parseInt(categoryId),
+        name: activityName,
+        quantity: quantity,
+        unit: unit,
+        co2: co2,
+        date: date
+      };
+      
+      try {
+        await API.addActivity(payload);
+        e.target.reset();
+        document.getElementById('date').valueAsDate = new Date();
+        document.getElementById('co2Preview').style.display = 'none';
+        
+        await loadAllActivities();
+        
+        showAlert('Activity added successfully!', 'success');
+      } catch (error) {
+        handleAPIError(error, 'add activity');
+      }
+    });
+
+    async function loadAllActivities() {
+      try {
+        allActivities = await API.getActivitiesByUser(user.id);
+        filterActivities();
+        loadRecentActivities();
+      } catch (error) {
+        handleAPIError(error, 'load activities');
+        document.getElementById('loadingState').innerHTML = `
+          <div class="text-danger">
+            <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+            <p>Failed to load activities. Please try again.</p>
+          </div>
+        `;
+        document.getElementById('activitiesList').innerHTML = `
+          <tr>
+            <td colspan="5" class="text-center text-muted py-4">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              Unable to load activities. Please check your connection.
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    function showAlert(message, type) {
+      const existingAlerts = document.querySelectorAll('.alert');
+      existingAlerts.forEach(alert => alert.remove());
+      
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show`;
+      alert.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      
+      document.querySelector('main').insertBefore(alert, document.querySelector('.container > .row'));
+      
+      setTimeout(() => {
+        if (alert.parentNode) {
+          alert.remove();
+        }
+      }, 3000);
+    }
+
+    function editActivity(activityId) {
+      alert(`Edit activity ${activityId} - Implementation needed`);
+    }
+
+    function deleteActivity(activityId) {
+      if (confirm('Are you sure you want to delete this activity?')) {
+        console.log('Delete activity:', activityId);
+        loadAllActivities();
+      }
+    }
+
+    (async function init() {
+      await loadAllActivities();
+    })();
+  </script>
+</body>
+</html>

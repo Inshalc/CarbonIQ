@@ -1,0 +1,289 @@
+:root {
+  --bg: #0b1b13;
+  --surface: #0f2a1e;
+  --accent: #22c55c;
+  --accent-light: #93e9a9;
+  --text: #ecf4ef;
+  --muted: #9fb6a8;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.navbar,
+.card {
+  background-color: var(--surface) !important;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-brand {
+  color: var(--text) !important;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.logo-icon {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+  color: var(--accent);
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.btn-primary:hover {
+  background-color: var(--accent-light);
+  border-color: var(--accent-light);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(34, 197, 92, 0.4);
+}
+
+.btn-outline {
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+.btn-outline:hover {
+  background-color: var(--accent);
+  color: var(--bg);
+}
+
+.input-control {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+.input-control:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--accent);
+  color: var(--text);
+  box-shadow: 0 0 0 0.25rem rgba(34, 197, 92, 0.25);
+}
+.input-control::placeholder {
+  color: var(--muted);
+}
+.page-title {
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.kpi-value {
+  color: var(--accent-light);
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background-color: var(--accent);
+  color: var(--bg);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.table {
+  color: var(--text);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.table thead {
+  background-color: var(--accent);
+  color: var(--bg);
+}
+.table tbody tr:nth-child(even) {
+  background-color: rgba(34, 197, 92, 0.05);
+}
+
+.progress {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  height: 10px;
+}
+.progress-bar {
+  background-color: var(--accent);
+}
+
+a {
+  color: var(--accent-light);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--accent);
+}
+
+.card {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.card-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(34, 197, 92, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  color: var(--accent);
+  font-size: 1.5rem;
+}
+
+.card-title {
+  color: var(--accent-light);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.grade-a { background-color: #22c55c; color: var(--bg); }
+.grade-b { background-color: #a3e635; color: var(--bg); }
+.grade-c { background-color: #facc15; color: var(--bg); }
+.grade-d { background-color: #fb923c; color: var(--bg); }
+.grade-f { background-color: #ef4444; color: white; }
+
+.suggestion-item {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  max-height: 150px;       
+  overflow-y: auto;        
+  padding-right: 0.5rem;
+}
+.suggestion-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  padding-left: 1.5rem;
+}
+
+.tip-level {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+.level-high { background: #ef4444; color: white; }
+.level-medium { background: #facc15; color: var(--bg); }
+.level-low { background: #22c55c; color: var(--bg); }
+
+.category-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+.category-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.category-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(34, 197, 92, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  color: var(--accent);
+}
+
+#personalizedTips,
+.accordion-body {
+  max-height: 200px;      
+  overflow-y: auto;       
+  padding-right: 0.5rem;  
+}
+
+#personalizedTips::-webkit-scrollbar,
+.accordion-body::-webkit-scrollbar,
+.suggestion-item::-webkit-scrollbar {
+  width: 6px;
+}
+#personalizedTips::-webkit-scrollbar-thumb,
+.accordion-body::-webkit-scrollbar-thumb,
+.suggestion-item::-webkit-scrollbar-thumb {
+  background-color: rgba(34, 197, 92, 0.5);
+  border-radius: 3px;
+}
+
+.accordion-button {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 0.5rem;
+  border-radius: 8px !important;
+}
+.accordion-button:not(.collapsed) {
+  background-color: rgba(34, 197, 92, 0.1) !important;
+  color: var(--accent-light) !important;
+  box-shadow: none;
+}
+.accordion-button:focus {
+  box-shadow: 0 0 0 0.25rem rgba(34, 197, 92, 0.25);
+  border-color: var(--accent);
+}
+.accordion-item {
+  border: none;
+  background: transparent;
+  margin-bottom: 0.5rem;
+}
+.accordion-body {
+  background-color: var(--surface);
+  color: var(--text);
+  border-radius: 0 0 8px 8px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .card {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.text-muted,
+.small,
+.card .text-muted,
+.card small,
+.card p.text-muted,
+.card .small {
+  color: var(--text) !important;
+  opacity: 0.85;
+}
+
