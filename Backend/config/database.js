@@ -5,7 +5,7 @@ const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'project_db', // Updated to your DB name
+  database: process.env.DB_NAME || 'carbon_footprint_db',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -18,7 +18,12 @@ const pool = mysql.createPool(dbConfig);
 const testConnection = async () => {
   try {
     const connection = await pool.getConnection();
-    console.log('✅ Database connected successfully to project_db');
+    console.log('✅ Database connected successfully to carbon_footprint_db');
+    
+    // Test basic query
+    const [rows] = await connection.execute('SELECT COUNT(*) as user_count FROM User');
+    console.log(`📊 Database contains ${rows[0].user_count} users`);
+    
     connection.release();
     return true;
   } catch (error) {
@@ -27,7 +32,19 @@ const testConnection = async () => {
   }
 };
 
+// Helper function for database queries
+const query = async (sql, params = []) => {
+  try {
+    const [results] = await pool.execute(sql, params);
+    return results;
+  } catch (error) {
+    console.error('Database query error:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   pool,
-  testConnection
+  testConnection,
+  query
 };

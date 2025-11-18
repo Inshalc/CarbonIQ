@@ -339,34 +339,138 @@
     </div>
   </nav>
 
-  <main class="container py-4">
-    <div class="row">
-      <div class="col-lg-8">
-        <h2 class="page-title mb-4">Log Activity</h2>
+<main class="container py-4">
+  <nav class="navbar px-4 py-3 mb-4">
+    <div class="d-flex align-items-center">
+      <div class="logo-icon">
+        <i class="fas fa-leaf"></i>
+      </div>
+      <a class="navbar-brand" href="dashboard.html">CarbonIQ</a>
+    </div>
+    <div class="ms-auto">
+      <span id="userWelcome"></span>
+      <button class="btn btn-outline btn-sm ms-2" id="logoutBtn">Logout</button>
+    </div>
+  </nav>
 
-        <form id="activityForm" class="card p-4 mb-4">
-          <div class="mb-3">
-            <label class="form-label">Select Activity Type</label>
-            <select id="activityType" class="form-control input-control">
-              <option value="">Choose a common activity (optional)</option>
-              <option value="drive_car">Drive Car (Gasoline)</option>
-              <option value="take_bus">Take Bus</option>
-              <option value="eat_beef">Eat Beef Meal</option>
-              <option value="eat_chicken">Eat Chicken Meal</option>
-              <option value="eat_vegetarian">Eat Vegetarian Meal</option>
-              <option value="use_electricity">Use Electricity</option>
-              <option value="home_heating">Home Heating (Gas)</option>
-              <option value="buy_clothes">Buy New Clothes</option>
-              <option value="recycle_paper">Recycle Paper</option>
-              <option value="take_shower">Take Shower</option>
-            </select>
-            <div class="form-text text-muted">Selecting an activity will auto-calculate CO2 emissions</div>
+  <div class="row">
+    <!-- Left Column: Activity Form -->
+    <div class="col-lg-6">
+      <h2 class="page-title mb-4">Log New Activity</h2>
+
+      <form id="activityForm" class="card p-4 mb-4">
+        <div class="mb-3">
+          <label class="form-label">Select Activity Type</label>
+          <select id="activityType" class="form-control input-control">
+            <option value="">Choose a common activity (optional)</option>
+            <option value="drive_car">Drive Car (Gasoline)</option>
+            <option value="take_bus">Take Bus</option>
+            <option value="eat_beef">Eat Beef Meal</option>
+            <option value="eat_chicken">Eat Chicken Meal</option>
+            <option value="eat_vegetarian">Eat Vegetarian Meal</option>
+            <option value="use_electricity">Use Electricity</option>
+            <option value="home_heating">Home Heating (Gas)</option>
+            <option value="buy_clothes">Buy New Clothes</option>
+            <option value="recycle_paper">Recycle Paper</option>
+            <option value="take_shower">Take Shower</option>
+          </select>
+          <div class="form-text text-muted">Selecting an activity will auto-calculate CO2 emissions</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Category</label>
+          <select id="category" class="form-control input-control" required>
+            <option value="">Select category</option>
+            <option value="1">Transportation</option>
+            <option value="2">Diet</option>
+            <option value="3">Energy</option>
+            <option value="4">Shopping</option>
+            <option value="5">Waste</option>
+            <option value="6">Water Use</option>
+            <option value="7">Travel</option>
+            <option value="8">Work/Office</option>
+            <option value="9">Home</option>
+            <option value="10">Community</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Activity Name</label>
+          <input id="activityName" class="form-control input-control" placeholder="e.g., Drive Car 10 km" required>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Quantity</label>
+            <input id="quantity" type="number" class="form-control input-control" placeholder="e.g., 10" step="0.1" min="0" required>
           </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Unit</label>
+            <input id="unit" class="form-control input-control" placeholder="e.g., km, meal, kWh" required>
+          </div>
+        </div>
 
-          <div class="mb-3">
+        <div id="co2Preview" class="co2-preview" style="display: none;">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <strong>Estimated CO2 Emission:</strong>
+              <div id="co2Value" class="kpi-value">0 kg</div>
+            </div>
+            <div class="text-muted small" id="co2Calculation"></div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Emission (kg CO2e)</label>
+          <input id="co2" type="number" step="0.01" class="form-control input-control" placeholder="e.g., 2.3" required>
+          <div class="form-text text-muted">This will be auto-calculated when you select an activity type</div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Date</label>
+          <input id="date" type="date" class="form-control input-control" required>
+        </div>
+
+        <button class="btn btn-primary w-100 py-2">
+          <i class="fas fa-plus-circle me-2"></i>Add Activity
+        </button>
+      </form>
+    </div>
+
+    <!-- Right Column: Activities List -->
+    <div class="col-lg-6">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="page-title mb-0">Your Activities</h2>
+        <div class="d-flex align-items-center">
+          <span class="me-2">Sort by:</span>
+          <select class="form-control input-control form-select-sm" id="sortBy" style="width: auto;">
+            <option value="date-desc">Newest First</option>
+            <option value="date-asc">Oldest First</option>
+            <option value="emission-desc">Highest Emission</option>
+            <option value="emission-asc">Lowest Emission</option>
+            <option value="name">Name A-Z</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Search & Filter Card -->
+<div class="card p-4 mb-4" style="max-height: 300px;">
+        <h5 class="card-title mb-3">Search & Filter Activities</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Search Activities</label>
+            <div class="input-group">
+              <input type="text" class="form-control input-control" id="searchInput" placeholder="Search by name...">
+              <button class="btn btn-outline" type="button" id="searchButton">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
             <label class="form-label">Category</label>
-            <select id="category" class="form-control input-control" required>
-              <option value="">Select category</option>
+            <select class="form-control input-control" id="categoryFilter">
+              <option value="">All Categories</option>
               <option value="1">Transportation</option>
               <option value="2">Diet</option>
               <option value="3">Energy</option>
@@ -379,178 +483,66 @@
               <option value="10">Community</option>
             </select>
           </div>
-
-          <div class="mb-3">
-            <label class="form-label">Activity Name</label>
-            <input id="activityName" class="form-control input-control" placeholder="e.g., Drive Car 10 km" required>
-          </div>
-
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Quantity</label>
-              <input id="quantity" type="number" class="form-control input-control" placeholder="e.g., 10" step="0.1" min="0">
-            </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Unit</label>
-              <input id="unit" class="form-control input-control" placeholder="e.g., km, meal, kWh" required>
-            </div>
-          </div>
-
-          <div id="co2Preview" class="co2-preview" style="display: none;">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <strong>Estimated CO2 Emission:</strong>
-                <div id="co2Value" class="kpi-value">0 kg</div>
-              </div>
-              <div class="text-muted small" id="co2Calculation"></div>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Emission (kg CO2e)</label>
-            <input id="co2" type="number" step="0.01" class="form-control input-control" placeholder="e.g., 2.3" required>
-            <div class="form-text text-muted">This will be auto-calculated when you select an activity type</div>
-          </div>
-
-          <div class="mb-4">
-            <label class="form-label">Date</label>
-            <input id="date" type="date" class="form-control input-control" required>
-          </div>
-
-          <button class="btn btn-primary w-100 py-2">
-            <i class="fas fa-plus-circle me-2"></i>Add Activity
-          </button>
-        </form>
-
-        <div class="card p-4 mb-4">
-          <h5 class="card-title mb-3">Search & Filter Activities</h5>
-          <div class="row g-3">
-            <div class="col-md-4">
-              <label class="form-label">Search Activities</label>
-              <div class="input-group">
-                <input type="text" class="form-control input-control" id="searchInput" placeholder="Search by name...">
-                <button class="btn btn-outline" type="button" id="searchButton">
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
-            </div>
-            
-            <div class="col-md-3">
-              <label class="form-label">Category</label>
-              <select class="form-control input-control" id="categoryFilter">
-                <option value="">All Categories</option>
-                <option value="1">Transportation</option>
-                <option value="2">Diet</option>
-                <option value="3">Energy</option>
-                <option value="4">Shopping</option>
-                <option value="5">Waste</option>
-                <option value="6">Water Use</option>
-                <option value="7">Travel</option>
-                <option value="8">Work/Office</option>
-                <option value="9">Home</option>
-                <option value="10">Community</option>
-              </select>
-            </div>
-            
-            <div class="col-md-3">
-              <label class="form-label">Date Range</label>
-              <select class="form-control input-control" id="dateFilter">
-                <option value="all">All Time</option>
-                <option value="today">Today</option>
-                <option value="week">This Week</option>
-                <option value="month">This Month</option>
-                <option value="custom">Custom Range</option>
-              </select>
-            </div>
-            
-            <div class="col-md-2 d-flex align-items-end">
-              <button class="btn btn-outline w-100 me-2" id="resetFilters">
-                <i class="fas fa-refresh me-2"></i>Reset
-              </button>
-            </div>
-          </div>
-
-          <div class="row mt-3" id="customDateRange" style="display: none;">
-            <div class="col-md-6">
-              <label class="form-label">From Date</label>
-              <input type="date" class="form-control input-control" id="startDate">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">To Date</label>
-              <input type="date" class="form-control input-control" id="endDate">
-            </div>
-          </div>
-        </div>
-
-        <div class="card p-4">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="card-title mb-0">Your Activities</h5>
-            <div class="d-flex align-items-center">
-              <span class="me-2">Sort by:</span>
-              <select class="form-control input-control form-select-sm" id="sortBy" style="width: auto;">
-                <option value="date-desc">Newest First</option>
-                <option value="date-asc">Oldest First</option>
-                <option value="emission-desc">Highest Emission</option>
-                <option value="emission-asc">Lowest Emission</option>
-                <option value="name">Name A-Z</option>
-              </select>
-            </div>
+          
+          <div class="col-md-6">
+            <label class="form-label">Date Range</label>
+            <select class="form-control input-control" id="dateFilter">
+              <option value="all">All Time</option>
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+            </select>
           </div>
           
-          <div class="table-responsive">
-            <table class="table table-hover" id="activitiesTable">
-              <thead>
-                <tr>
-                  <th>Activity</th>
-                  <th>Category</th>
-                  <th>Date</th>
-                  <th>Emissions (kg CO2e)</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="activitiesList">
-              </tbody>
-            </table>
-          </div>
-          
-          <div id="emptyState" class="text-center py-5" style="display: none;">
-            <i class="fas fa-clipboard-list fa-3x mb-3" style="color: var(--muted);"></i>
-            <h5>No activities found</h5>
-            <p class="text-muted">Try adjusting your filters or add a new activity.</p>
-            <button class="btn btn-primary" onclick="scrollToForm()">
-              <i class="fas fa-plus me-2"></i>Add Your First Activity
+          <div class="col-md-6 d-flex align-items-end">
+            <button class="btn btn-outline w-100 me-2" id="resetFilters">
+              <i class="fas fa-refresh me-2"></i>Reset Filters
             </button>
-          </div>
-
-          <div id="loadingState" class="text-center py-4">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mt-2 text-muted">Loading activities...</p>
           </div>
         </div>
       </div>
 
-      <div class="col-lg-4">
-        <div class="card p-4 h-100">
-          <div class="card-icon">
-            <i class="fas fa-history"></i>
+      <!-- Activities Table Card -->
+      <div class="card p-4">
+        <div class="table-responsive">
+          <table class="table table-hover" id="activitiesTable">
+            <thead>
+              <tr>
+                <th>Activity</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Emissions</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="activitiesList">
+              <!-- Activities will be loaded here -->
+            </tbody>
+          </table>
+        </div>
+        
+        <div id="emptyState" class="text-center py-5" style="display: none;">
+          <i class="fas fa-clipboard-list fa-3x mb-3" style="color: var(--muted);"></i>
+          <h5>No activities found</h5>
+          <p class="text-muted">Try adjusting your filters or add a new activity.</p>
+          <button class="btn btn-primary" onclick="document.getElementById('activityForm').scrollIntoView({ behavior: 'smooth' })">
+            <i class="fas fa-plus me-2"></i>Add Your First Activity
+          </button>
+        </div>
+
+        <div id="loadingState" class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
           </div>
-          <h5 class="card-title">Recent Activities</h5>
-          <div id="recentActivityList" class="mb-3">
-          </div>
-          <div class="mt-auto">
-            <button class="btn btn-outline w-100" onclick="location.href='report.html'">
-              <i class="fas fa-chart-bar me-2"></i>View Reports
-            </button>
-          </div>
+          <p class="mt-2 text-muted">Loading activities...</p>
         </div>
       </div>
     </div>
-  </main>
+  </div>
+</main>
 
   <script src="js/app.js"></script>
-  <script src="js/api-config.js"></script>
+<script src="js/activities.js"></script>
   <script>
     const user = requireAuth();
     let allActivities = [];

@@ -3,6 +3,7 @@ const { body, validationResult } = require('express-validator');
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log('Validation errors:', errors.array());
     return res.status(400).json({ 
       error: 'Validation failed', 
       details: errors.array() 
@@ -60,7 +61,7 @@ const validateActivity = [
     .isDate()
     .withMessage('Start date must be a valid date'),
   body('end_date')
-    .optional({ checkFalsy: true }) // Make it truly optional
+    .optional({ checkFalsy: true })
     .isDate()
     .withMessage('End date must be a valid date'),
   handleValidationErrors

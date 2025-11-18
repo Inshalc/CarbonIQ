@@ -8,14 +8,15 @@ const router = express.Router();
 // Get all activities for logged-in user
 router.get('/', authenticate, async (req, res) => {
   try {
-    const [activities] = await pool.execute(
-      `SELECT a.*, c.name as category_name 
-       FROM Activity a 
-       JOIN Category c ON a.category_id = c.category_id 
-       WHERE a.user_id = ? 
-       ORDER BY a.start_date DESC`,
-      [req.session.userId]
-    );
+       const [activities] = await pool.execute(
+  `SELECT a.*, c.name as category_name 
+   FROM Activity a 
+   JOIN Category c ON a.category_id = c.category_id 
+   WHERE a.user_id = ? 
+   ORDER BY a.start_date DESC`,
+  [req.session.userId]  
+);
+
     
     res.json(activities);
   } catch (error) {

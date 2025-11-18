@@ -2,4 +2,4 @@
 SHOW DATABASES;
 USE project_db;
 SHOW TABLES;
-SELECT * FROM project_db;
+SELECT * FROM project;

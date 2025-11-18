@@ -1,113 +1,117 @@
 const express = require('express');
+const router = express.Router();
 const { pool } = require('../config/database');
 const { authenticate } = require('../middleware/auth');
 
-const router = express.Router();
-
-// Get emission summary for user
+// Get emissions summary
 router.get('/summary', authenticate, async (req, res) => {
-  try {
-    const userId = req.session.userId;
-    
-    // Get total emissions from report
-    const [reports] = await pool.execute(
-      'SELECT total_emission FROM Report WHERE userID = ?',
-      [userId]
-    );
-    
-    // Get emissions by category
-    const [categoryEmissions] = await pool.execute(
-      `SELECT c.name as category_name, SUM(a.CO2_result) as total_emission
-       FROM Activity a
-       JOIN Category c ON a.category_id = c.category_id
-       WHERE a.user_id = ?
-       GROUP BY c.name`,
-      [userId]
-    );
-    
-    // Get weekly trend
-    const [weeklyTrend] = await pool.execute(
-      `SELECT DATE(start_date) as date, SUM(CO2_result) as daily_emission
-       FROM Activity 
-       WHERE user_id = ? AND start_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-       GROUP BY DATE(start_date)
-       ORDER BY date`,
-      [userId]
-    );
-    
-    const summary = {
-      total_emission: reports.length > 0 ? reports[0].total_emission : 0,
-      by_category: categoryEmissions,
-      weekly_trend: weeklyTrend,
-      user_id: userId
-    };
-    
-    res.json(summary);
-  } catch (error) {
-    console.error('Get emissions summary error:', error);
-    res.status(500).json({ error: 'Failed to fetch emissions summary' });
-  }
+    try {
+        const userId = req.session.userId;
+
+        // Get weekly trend - FIXED table names
+        const weeklyQuery = `
+            SELECT DATE(start_date) as date, SUM(CO2_result) as daily_emission
+            FROM Activity 
+            WHERE user_id = ? AND start_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+            GROUP BY DATE(start_date)
+            ORDER BY date
+        `;
+
+        // Get by category - FIXED table names
+        const categoryQuery = `
+            SELECT c.name as category_name, SUM(a.CO2_result) as total_emission
+            FROM Activity a
+            JOIN Category c ON a.category_id = c.category_id
+            WHERE a.user_id = ?
+            GROUP BY c.category_id, c.name
+        `;
+
+        const [weeklyResults] = await pool.execute(weeklyQuery, [userId]);
+        const [categoryResults] = await pool.execute(categoryQuery, [userId]);
+
+        // Calculate total
+        const totalEmission = categoryResults.reduce((sum, item) => sum + item.total_emission, 0);
+
+        res.json({
+            weekly_trend: weeklyResults,
+            by_category: categoryResults,
+            total_emission: totalEmission
+        });
+
+    } catch (error) {
+        console.error('Emissions summary error:', error);
+        res.status(500).json({ error: 'Failed to load emissions data' });
+    }
 });
 
-// Get categories
+// Get emission categories - FIXED table name
 router.get('/categories', async (req, res) => {
-  try {
-    const [categories] = await pool.execute('SELECT * FROM Category');
-    res.json(categories);
-  } catch (error) {
-    console.error('Get categories error:', error);
-    res.status(500).json({ error: 'Failed to fetch categories' });
-  }
+    try {
+        const [categories] = await pool.execute('SELECT * FROM Category');
+        res.json(categories);
+    } catch (error) {
+        console.error('Categories error:', error);
+        res.status(500).json({ error: 'Failed to load categories' });
+    }
 });
 
-// Get suggestions based on user activities
+// Get suggestions - FIXED table names and session
 router.get('/suggestions', authenticate, async (req, res) => {
-  try {
-    const userId = req.session.userId;
-    
-    // Get user's high-emission activities
-    const [highEmissionActivities] = await pool.execute(
-      `SELECT a.activity_name, a.CO2_result, c.name as category_name
-       FROM Activity a
-       JOIN Category c ON a.category_id = c.category_id
-       WHERE a.user_id = ? AND a.CO2_result > (
-         SELECT AVG(CO2_result) FROM Activity WHERE user_id = ?
-       )
-       ORDER BY a.CO2_result DESC
-       LIMIT 5`,
-      [userId, userId]
-    );
-    
-    // Get relevant suggestions
-    let suggestions = [];
-    if (highEmissionActivities.length > 0) {
-      const activityNames = highEmissionActivities.map(a => a.activity_name);
-      const placeholders = activityNames.map(() => '?').join(',');
-      
-      const [suggestionResults] = await pool.execute(
-        `SELECT * FROM Suggestion WHERE activity_name IN (${placeholders})`,
-        activityNames
-      );
-      
-      suggestions = suggestionResults;
+    try {
+        const userId = req.session.userId;
+        
+        // Get user's high emission categories - FIXED table names
+        const highEmissionQuery = `
+            SELECT c.category_id, c.name as category_name, SUM(a.CO2_result) as total_emission
+            FROM Activity a
+            JOIN Category c ON a.category_id = c.category_id
+            WHERE a.user_id = ?
+            GROUP BY c.category_id, c.name
+            ORDER BY total_emission DESC
+            LIMIT 3
+        `;
+
+        const [highEmissionCats] = await pool.execute(highEmissionQuery, [userId]);
+
+        // Generate suggestions based on high emission categories
+        const suggestions = highEmissionCats.map(cat => {
+            const categorySuggestions = {
+                1: [ // Transportation
+                    { title: 'Use Public Transport', description: 'Try taking the bus or train instead of driving to reduce emissions by up to 50%.' },
+                    { title: 'Carpool', description: 'Share rides with colleagues or friends to cut transportation emissions.' },
+                    { title: 'Walk or Bike', description: 'For short distances, consider walking or biking instead of driving.' }
+                ],
+                2: [ // Diet
+                    { title: 'Plant-Based Meals', description: 'Try incorporating more plant-based meals to significantly reduce dietary emissions.' },
+                    { title: 'Local Produce', description: 'Buy local and seasonal foods to reduce transportation emissions.' },
+                    { title: 'Reduce Food Waste', description: 'Plan meals and store food properly to minimize waste.' }
+                ],
+                3: [ // Energy
+                    { title: 'Energy Efficient Appliances', description: 'Use energy-efficient appliances and turn them off when not in use.' },
+                    { title: 'LED Lighting', description: 'Switch to LED bulbs which use 75% less energy.' },
+                    { title: 'Smart Thermostat', description: 'Use a programmable thermostat to optimize heating and cooling.' }
+                ],
+                4: [ // Shopping
+                    { title: 'Buy Second-Hand', description: 'Purchase used items to reduce manufacturing emissions.' },
+                    { title: 'Quality Over Quantity', description: 'Invest in durable products that last longer.' }
+                ],
+                5: [ // Water Use
+                    { title: 'Shorter Showers', description: 'Reduce shower time to save water and energy.' },
+                    { title: 'Fix Leaks', description: 'Repair leaky faucets to prevent water waste.' }
+                ]
+            };
+
+            return categorySuggestions[cat.category_id] || [
+                { title: 'General Tip', description: 'Monitor your activities regularly to identify emission hotspots.' }
+            ];
+        }).flat();
+
+        res.json({ suggestions: suggestions.slice(0, 5) }); // Return top 5 suggestions
+
+    } catch (error) {
+        console.error('Suggestions error:', error);
+        res.status(500).json({ error: 'Failed to load suggestions' });
     }
-    
-    // If no specific suggestions, get general ones
-    if (suggestions.length === 0) {
-      const [generalSuggestions] = await pool.execute(
-        'SELECT * FROM Suggestion LIMIT 3'
-      );
-      suggestions = generalSuggestions;
-    }
-    
-    res.json({
-      high_emission_activities: highEmissionActivities,
-      suggestions: suggestions
-    });
-  } catch (error) {
-    console.error('Get suggestions error:', error);
-    res.status(500).json({ error: 'Failed to fetch suggestions' });
-  }
 });
 
 module.exports = router;
