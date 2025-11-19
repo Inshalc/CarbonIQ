@@ -113,6 +113,5 @@ CarbonIQ uses a **3-tier architecture**:
 
 ---
 
-## ✅ Conclusion
 
 CarbonIQ is a comprehensive, user-friendly solution for tracking and reducing personal carbon emissions. Through full-stack development, database design, and API integration, this system provides meaningful insights that encourage sustainable behavior. It demonstrates how software engineering and data management can work together to address real-world environmental challenges.
