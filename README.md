@@ -6,23 +6,24 @@ A personal carbon footprint tracker that helps you monitor, analyze, and reduce 
 
 ## ✨ Features
 
-- **📊 Real-Time Dashboard – Interactive visualizations of daily CO₂ emissions
+ Real-Time Dashboard – Interactive visualizations of daily CO₂ emissions
 
-📝 Activity Logging – Track transport, energy, food, and lifestyle activities
+ Activity Logging – Track transport, energy, food, and lifestyle activities
 
-🎯 Personalized Suggestions – Get actionable ways to lower emissions
+ Personalized Suggestions – Get actionable ways to lower emissions
 
-📈 Emission Trend Analysis – View charts, categories, and weekly summaries
+ Emission Trend Analysis – View charts, categories, and weekly summaries
 
-🏆 Sustainability Grading – View how sustainable your lifestyle is
+ Sustainability Grading – View how sustainable your lifestyle is
 
-📄 Export Reports – Generate PDF & CSV reports
+ Export Reports – Generate PDF & CSV reports
 
-🌤 Weather Integration – Uses OpenWeather API to improve emission accuracy
+ Weather Integration – Uses OpenWeather API to improve emission accuracy
 
-🔐 User Authentication – Secure login & registration with hashed passwords
+ User Authentication – Secure login & registration with hashed passwords
 
-📱 Responsive Frontend – Fully optimized for desktop & mobile
+ Responsive Frontend – Fully optimized for desktop & mobile
+
 
 ## 🚀 Quick Start
 
