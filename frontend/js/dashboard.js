@@ -1,7 +1,6 @@
+// frontend/js/dashboard.js - UPDATED VERSION
 class Dashboard {
     constructor() {
-        this.apiBase = '/api';
-        this.charts = {};
         this.init();
     }
 
@@ -30,8 +29,13 @@ class Dashboard {
         try {
             console.log('Loading dashboard data...');
             
-            // Mock data for now - you can replace with actual API calls
-            this.displayMockData();
+            // Load real data from APIs
+            await Promise.all([
+                this.loadUserInfo(),
+                this.loadActivities(),
+                this.loadEmissionsSummary(),
+                this.loadSuggestions()
+            ]);
             
         } catch (error) {
             console.error('Dashboard data loading error:', error);
@@ -39,8 +43,7 @@ class Dashboard {
         }
     }
 
-    displayMockData() {
-        // Welcome message
+    async loadUserInfo() {
         const user = Session.getUser();
         if (user) {
             const welcomeElement = document.getElementById('welcomeTag') || document.getElementById('userWelcome');
@@ -48,58 +51,103 @@ class Dashboard {
                 welcomeElement.textContent = `Hello, ${user.first_name || user.username}`;
             }
         }
-
-        // Mock stats
-        this.updateStats({
-            todayEmission: 5.2,
-            weeklyEmission: 34.7,
-            activityCount: 8,
-            savings: -12.5
-        });
-
-        // Mock charts
-        this.createMockCharts();
-
-        // Mock recent activities
-        this.displayRecentActivities([
-            { activity_name: 'Drive to work', category_name: 'Transportation', CO2_result: 2.3, start_date: '2024-01-15' },
-            { activity_name: 'Electricity usage', category_name: 'Energy', CO2_result: 1.8, start_date: '2024-01-15' },
-            { activity_name: 'Lunch', category_name: 'Diet', CO2_result: 3.1, start_date: '2024-01-14' }
-        ]);
-
-        // Mock suggestions
-        this.displaySuggestions([
-            { title: 'Use Public Transport', description: 'Try taking the bus or train to reduce emissions by up to 50%.' },
-            { title: 'Energy Efficient Lighting', description: 'Switch to LED bulbs to save energy and reduce emissions.' }
-        ]);
     }
 
-    updateStats(data) {
-        const todayEmission = document.getElementById('todayEmission');
-        const weeklyEmission = document.getElementById('weeklyEmission');
-        const activityCount = document.getElementById('activityCount');
-        const savings = document.getElementById('savings');
+    async loadActivities() {
+    try {
+        const activities = await API.getActivities();
+        console.log('Dashboard activities:', activities);
+        this.displayRecentActivities(activities.slice(0, 5));
+        this.updateActivityStats(activities);
+    } catch (error) {
+        console.error('Failed to load activities for dashboard:', error);
+        // Show empty state
+        this.displayRecentActivities([]);
+    }
+}
 
-        if (todayEmission) todayEmission.textContent = data.todayEmission.toFixed(1);
-        if (weeklyEmission) weeklyEmission.textContent = data.weeklyEmission.toFixed(1);
-        if (activityCount) activityCount.textContent = data.activityCount;
-        if (savings) {
-            savings.textContent = `${data.savings > 0 ? '+' : ''}${data.savings.toFixed(1)}%`;
-            savings.style.color = data.savings > 0 ? '#28a745' : '#dc3545';
+async loadEmissionsSummary() {
+    try {
+        const summary = await API.getEmissionsSummary();
+        console.log('Emissions summary:', summary);
+        this.updateCharts(summary);
+        this.updateEmissionStats(summary);
+    } catch (error) {
+        console.error('Failed to load emissions summary:', error);
+        // Show empty charts
+        this.updateCharts({
+            weekly_trend: [],
+            by_category: [],
+            total_emission: 0
+        });
+    }
+}
+    async loadSuggestions() {
+        try {
+            const suggestionsData = await API.getSuggestions();
+            this.displaySuggestions(suggestionsData.suggestions || []);
+        } catch (error) {
+            console.error('Failed to load suggestions:', error);
+            this.displaySuggestions([]);
         }
     }
 
-    createMockCharts() {
+    updateActivityStats(activities) {
+        const activityCount = document.getElementById('activityCount');
+        if (activityCount) {
+            activityCount.textContent = activities.length;
+        }
+    }
+
+    updateEmissionStats(summary) {
+        const todayEmission = document.getElementById('todayEmission');
+        const weeklyEmission = document.getElementById('weeklyEmission');
+        const savings = document.getElementById('savings');
+
+        if (todayEmission) {
+            // Calculate today's emission from weekly trend
+            const today = new Date().toISOString().split('T')[0];
+            const todayData = summary.weekly_trend.find(item => 
+                item.date === today
+            );
+            todayEmission.textContent = (todayData?.daily_emission || 0).toFixed(1);
+        }
+
+        if (weeklyEmission) {
+            weeklyEmission.textContent = summary.total_emission.toFixed(1);
+        }
+
+        // Savings calculation (you can implement your own logic)
+        if (savings) {
+            const savingsValue = -5.2; // Example value
+            savings.textContent = `${savingsValue > 0 ? '+' : ''}${savingsValue.toFixed(1)}%`;
+            savings.style.color = savingsValue > 0 ? '#28a745' : '#dc3545';
+        }
+    }
+
+    updateCharts(summary) {
         // Weekly Trend Chart
         const weeklyCtx = document.getElementById('weeklyChart');
-        if (weeklyCtx) {
+        if (weeklyCtx && summary.weekly_trend) {
+            const labels = summary.weekly_trend.map(item => {
+                const date = new Date(item.date);
+                return date.toLocaleDateString('en-US', { weekday: 'short' });
+            });
+            const data = summary.weekly_trend.map(item => item.daily_emission);
+
+            this.charts = this.charts || {};
+            
+            if (this.charts.weekly) {
+                this.charts.weekly.destroy();
+            }
+
             this.charts.weekly = new Chart(weeklyCtx.getContext('2d'), {
                 type: 'line',
                 data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    labels: labels,
                     datasets: [{
                         label: 'Daily Emissions (kg CO₂)',
-                        data: [4.2, 5.1, 3.8, 6.2, 5.7, 4.9, 5.2],
+                        data: data,
                         borderColor: '#667eea',
                         backgroundColor: 'rgba(102, 126, 234, 0.1)',
                         borderWidth: 3,
@@ -112,6 +160,11 @@ class Dashboard {
                     plugins: {
                         legend: { position: 'top' },
                         title: { display: true, text: 'Weekly Carbon Emission Trend' }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
             });
@@ -119,14 +172,21 @@ class Dashboard {
 
         // Category Chart
         const categoryCtx = document.getElementById('categoryChart');
-        if (categoryCtx) {
+        if (categoryCtx && summary.by_category) {
+            const labels = summary.by_category.map(item => item.category_name);
+            const data = summary.by_category.map(item => item.total_emission);
+
+            if (this.charts.category) {
+                this.charts.category.destroy();
+            }
+
             this.charts.category = new Chart(categoryCtx.getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: ['Transport', 'Diet', 'Energy', 'Shopping'],
+                    labels: labels,
                     datasets: [{
-                        data: [12, 8, 6, 3],
-                        backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#4ecdc4']
+                        data: data,
+                        backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#4ecdc4', '#ff6b6b', '#ffd93d']
                     }]
                 },
                 options: {
@@ -179,7 +239,7 @@ class Dashboard {
         if (!container) return;
 
         if (suggestions.length === 0) {
-            container.innerHTML = '<p>No suggestions available at the moment.</p>';
+            container.innerHTML = '<p>No suggestions available. Add more activities to get personalized suggestions.</p>';
             return;
         }
 
@@ -202,6 +262,8 @@ class Dashboard {
 
     showError(message) {
         console.error('Dashboard error:', message);
+        // You can add a toast notification here
+        alert(message);
     }
 }
 

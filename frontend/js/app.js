@@ -1,176 +1,182 @@
-// Simple session management for frontend
-const Session = {
-  setUser(user) { 
-    localStorage.setItem('user', JSON.stringify(user)); 
-  },
-  getUser() { 
-    try {
-      const user = JSON.parse(localStorage.getItem('user'));
-      return user;
-    } catch (e) {
-      return null;
+// frontend/js/app.js
+class API {
+    static baseUrl = '/api';
+
+    static async request(endpoint, options = {}) {
+        const url = `${this.baseUrl}${endpoint}`;
+        const config = {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers,
+            },
+            ...options,
+        };
+
+        if (options.body) {
+            config.body = JSON.stringify(options.body);
+        }
+
+        try {
+            const response = await fetch(url, config);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || `HTTP error! status: ${response.status}`);
+            }
+
+            return data;
+        } catch (error) {
+            console.error('API request failed:', error);
+            throw error;
+        }
     }
-  },
-  clear() { 
-    localStorage.removeItem('user'); 
-  },
-  isAuthenticated() {
-    return !!this.getUser();
-  }
-};
 
-// Mock database for frontend (fallback)
-const MockDB = {
-  users: [
-    { id: 1, name: 'Zainab Lawal', username: 'zlawal', password: 'hash1' },
-    { id: 2, name: 'Inshal Chauhdry', username: 'ichauhdry', password: 'hash2' },
-    { id: 3, name: 'Armaan Parmar', username: 'aparmar', password: 'hash3' }
-  ],
-  categories: [
-    { id: 1, name: 'Transportation', icon: 'fa-car' },
-    { id: 2, name: 'Diet', icon: 'fa-utensils' },
-    { id: 3, name: 'Energy', icon: 'fa-bolt' },
-    { id: 4, name: 'Shopping', icon: 'fa-shopping-bag' },
-    { id: 5, name: 'Waste', icon: 'fa-recycle' },
-    { id: 6, name: 'Water Use', icon: 'fa-tint' }
-  ],
-  activities: [],
-  tips: []
-};
+    // Auth endpoints
+    static async login(credentials) {
+        return this.request('/auth/login', {
+            method: 'POST',
+            body: credentials,
+        });
+    }
 
-// Add this API object to your existing app.js file
-const API = {
-  // Check backend authentication status
-  async checkAuthStatus() {
+    static async register(userData) {
+        return this.request('/auth/register', {
+            method: 'POST',
+            body: userData,
+        });
+    }
+
+    static async logout() {
+        return this.request('/auth/logout', {
+            method: 'POST',
+        });
+    }
+
+    static async getAuthStatus() {
+        return this.request('/auth/status');
+    }
+
+    // Activities endpoints
+    static async getActivities() {
+        return this.request('/activities');
+    }
+
+    static async addActivity(activityData) {
+        return this.request('/activities', {
+            method: 'POST',
+            body: activityData,
+        });
+    }
+
+    static async updateActivity(id, activityData) {
+        return this.request(`/activities/${id}`, {
+            method: 'PUT',
+            body: activityData,
+        });
+    }
+
+    static async deleteActivity(id) {
+        return this.request(`/activities/${id}`, {
+            method: 'DELETE',
+        });
+    }
+
+    // Emissions endpoints
+    static async getEmissionsSummary() {
+        return this.request('/emissions/summary');
+    }
+
+    static async getCategories() {
+        return this.request('/emissions/categories');
+    }
+
+    static async getSuggestions() {
+        return this.request('/emissions/suggestions');
+    }
+}
+
+class Session {
+    static getUser() {
+        const userData = localStorage.getItem('user');
+        return userData ? JSON.parse(userData) : null;
+    }
+
+    static setUser(user) {
+        localStorage.setItem('user', JSON.stringify(user));
+    }
+
+    static clear() {
+        localStorage.removeItem('user');
+    }
+
+     static async checkAuth() {
+        try {
+            console.log('🔐 Checking authentication status...');
+            const response = await API.getAuthStatus();
+            console.log('Auth response:', response);
+            
+            if (response.authenticated) {
+                this.setUser(response.user);
+                console.log('✅ User authenticated:', response.user);
+                return response.user;
+            } else {
+                this.clear();
+                console.log('❌ User not authenticated');
+                return null;
+            }
+        } catch (error) {
+            console.error('Auth check failed:', error);
+            this.clear();
+            return null;
+        }
+    }
+}
+
+// Auth functions
+async function login(credentials) {
     try {
-      const response = await fetch('/api/auth/status', {
-        credentials: 'include'
-      });
-      return await response.json();
+        const response = await API.login(credentials);
+        Session.setUser(response.user);
+        return response;
     } catch (error) {
-      console.error('Auth status check failed:', error);
-      return { authenticated: false, user: null };
+        throw error;
     }
-  },
+}
 
-  // Logout from backend
-  async logout() {
+async function logout() {
     try {
-      await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include'
-      });
+        await API.logout();
     } catch (error) {
-      console.error('Logout error:', error);
+        console.error('Logout error:', error);
+    } finally {
+        Session.clear();
+        window.location.href = 'index.html';
     }
-  },
+}
 
-  // Get activities for user
-  async getActivitiesByUser(userId) {
+async function register(userData) {
     try {
-      const response = await fetch('/api/activities', {
-        credentials: 'include'
-      });
-      if (response.ok) {
-        return await response.json();
-      }
-      return [];
+        const response = await API.register(userData);
+        return response;
     } catch (error) {
-      console.error('Get activities error:', error);
-      return [];
+        throw error;
     }
-  },
+}
 
-  // Add new activity
-  async addActivity(activityData) {
-    try {
-      const response = await fetch('/api/activities', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(activityData)
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to add activity');
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Add activity error:', error);
-      throw error;
+async function requireAuth() {
+    const user = await Session.checkAuth();
+    if (!user) {
+        window.location.href = 'index.html';
+        return null;
     }
-  },
+    return user;
+}
 
-  // Get activity templates
-  async getActivityTemplates() {
-    try {
-      // For now, return mock templates - you can replace with actual API call
-      return [
-        { id: 1, name: 'Drive Car', category_id: 1, default_unit: 'km', co2_per_unit: 0.23, description: 'Gasoline car travel' },
-        { id: 2, name: 'Take Bus', category_id: 1, default_unit: 'km', co2_per_unit: 0.08, description: 'Public bus transportation' },
-        { id: 3, name: 'Eat Beef', category_id: 2, default_unit: 'meal', co2_per_unit: 27, description: 'Beef-based meal' },
-        { id: 4, name: 'Eat Chicken', category_id: 2, default_unit: 'meal', co2_per_unit: 6.9, description: 'Chicken-based meal' },
-        { id: 5, name: 'Eat Vegetarian', category_id: 2, default_unit: 'meal', co2_per_unit: 2.5, description: 'Plant-based meal' },
-        { id: 6, name: 'Use Electricity', category_id: 3, default_unit: 'kWh', co2_per_unit: 0.5, description: 'Grid electricity consumption' }
-      ];
-    } catch (error) {
-      console.error('Get templates error:', error);
-      return [];
-    }
-  },
-
-  // Get user reports
-  async getReportsByUser(userId) {
-    try {
-      // Mock implementation - replace with actual API call
-      return [];
-    } catch (error) {
-      console.error('Get reports error:', error);
-      return [];
-    }
-  },
-
-  // Get user grade
-  async getUserGrade(userId) {
-    try {
-      // Mock implementation
-      return { grade: 'B', description: 'Good' };
-    } catch (error) {
-      console.error('Get grade error:', error);
-      return { grade: 'N/A', description: 'No data' };
-    }
-  },
-
-  // Get personalized tips
-  async getPersonalizedTips(userId) {
-    try {
-      // Mock implementation
-      return [
-        { id: 1, category_id: 1, text: 'Use public transport instead of driving', level: 'high' },
-        { id: 2, category_id: 2, text: 'Try a plant-based meal', level: 'medium' }
-      ];
-    } catch (error) {
-      console.error('Get tips error:', error);
-      return [];
-    }
-  },
-
-  // Get all tips
-  async getTips() {
-    try {
-      // Mock implementation
-      return [
-        { id: 1, category_id: 1, text: 'Use public transport', level: 'high' },
-        { id: 2, category_id: 2, text: 'Eat less meat', level: 'medium' },
-        { id: 3, category_id: 3, text: 'Turn off lights', level: 'low' }
-      ];
-    } catch (error) {
-      console.error('Get tips error:', error);
-      return [];
-    }
-  }
-};
+// Make functions globally available
+window.API = API;
+window.Session = Session;
+window.login = login;
+window.logout = logout;
+window.register = register;
+window.requireAuth = requireAuth;

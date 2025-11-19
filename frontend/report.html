@@ -7,9 +7,189 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="css/theme.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    :root {
+      --bg: #0b1b13;
+      --surface: #0f2a1e;
+      --accent: #22c55c;
+      --accent-light: #93e9a9;
+      --text: #ecf4ef;
+      --muted: #9fb6a8;
+      --light-text: #c8dad0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background-color: var(--surface) !important;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .navbar-brand {
+      color: var(--text) !important;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-icon {
+      font-size: 1.5rem;
+      margin-right: 0.5rem;
+      color: var(--accent);
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: var(--bg);
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background-color: var(--accent-light);
+      border-color: var(--accent-light);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(34, 197, 92, 0.4);
+    }
+
+    .btn-outline {
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+    .btn-outline:hover {
+      background-color: var(--accent);
+      color: var(--bg);
+    }
+
+    .card {
+      background-color: var(--surface);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(34, 197, 92, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem auto;
+      color: var(--accent);
+      font-size: 1.25rem;
+    }
+
+    .form-label {
+      color: var(--text) !important;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .input-control {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+    }
+    .input-control:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent);
+      color: var(--text);
+      box-shadow: 0 0 0 0.25rem rgba(34, 197, 92, 0.25);
+    }
+
+    .page-title {
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .kpi-value {
+      color: var(--accent-light);
+      font-weight: bold;
+      font-size: 1.5rem;
+      margin: 0.5rem 0;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background-color: var(--accent);
+      color: var(--bg);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .category-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(34, 197, 92, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 0.5rem;
+      color: var(--accent);
+      font-size: 0.8rem;
+    }
+
+    .table {
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.1);
+      background-color: var(--surface);
+    }
+    
+    .table th {
+      border-color: rgba(255, 255, 255, 0.1);
+      color: var(--accent-light);
+      font-weight: 600;
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 0.75rem;
+    }
+    
+    .table td {
+      border-color: rgba(255, 255, 255, 0.05);
+      vertical-align: middle;
+      color: var(--text);
+      background-color: var(--surface);
+      padding: 0.75rem;
+    }
+    
+    .table-hover tbody tr:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .text-muted {
+      color: var(--light-text) !important;
+    }
+
+    .text-danger {
+      color: #fca5a5 !important;
+    }
+
+    .text-success {
+      color: var(--accent-light) !important;
+    }
+  </style>
 </head>
 <body>
   <nav class="navbar px-4 py-3 mb-4">
@@ -20,7 +200,7 @@
       <a class="navbar-brand" href="dashboard.html">CarbonIQ</a>
     </div>
     <div class="ms-auto">
-      <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+      <button class="btn btn-outline btn-sm" id="logoutBtn">Logout</button>
     </div>
   </nav>
 
@@ -29,7 +209,7 @@
       <h2 class="page-title mb-0">Your Reports</h2>
       <div class="d-flex gap-2">
         <input class="form-control input-control" id="reportSearch" placeholder="Search activities...">
-        <button class="btn btn-primary" onclick="downloadAllReportsPDF()">
+        <button class="btn btn-primary" id="exportAllBtn">
           <i class="fas fa-download me-2"></i>Export All
         </button>
       </div>
@@ -38,7 +218,7 @@
     <div class="row mb-4">
       <div class="col-md-3">
         <div class="card p-3 text-center">
-          <div class="card-icon mx-auto">
+          <div class="card-icon">
             <i class="fas fa-list"></i>
           </div>
           <h5 id="totalActivities" class="kpi-value">0</h5>
@@ -47,7 +227,7 @@
       </div>
       <div class="col-md-3">
         <div class="card p-3 text-center">
-          <div class="card-icon mx-auto">
+          <div class="card-icon">
             <i class="fas fa-cloud"></i>
           </div>
           <h5 id="totalEmissions" class="kpi-value">0 kg</h5>
@@ -56,7 +236,7 @@
       </div>
       <div class="col-md-3">
         <div class="card p-3 text-center">
-          <div class="card-icon mx-auto">
+          <div class="card-icon">
             <i class="fas fa-calendar"></i>
           </div>
           <h5 id="timePeriod" class="kpi-value">-</h5>
@@ -65,7 +245,7 @@
       </div>
       <div class="col-md-3">
         <div class="card p-3 text-center">
-          <div class="card-icon mx-auto">
+          <div class="card-icon">
             <i class="fas fa-chart-line"></i>
           </div>
           <h5 id="averageDaily" class="kpi-value">0 kg</h5>
@@ -76,7 +256,7 @@
 
     <div class="card p-4">
       <div class="table-responsive">
-        <table class="table" id="reportTable">
+        <table class="table table-hover" id="reportTable">
           <thead>
             <tr>
               <th>Activity</th>
@@ -87,7 +267,9 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="activitiesTableBody">
+            <!-- Activities will be loaded here -->
+          </tbody>
         </table>
       </div>
       <div id="emptyState" class="text-center py-5" style="display:none;">
@@ -104,156 +286,395 @@
   </main>
 
   <script src="js/app.js"></script>
-  <script src="js/api-config.js"></script>
   <script>
-    const user = requireAuth();
-    let rowsCache = [];
-    let allActivities = [];
+    class ReportsManager {
+    constructor() {
+        this.apiBase = '/api';
+        this.categories = [
+            { category_id: 1, name: 'Transportation', icon: 'fa-car' },
+            { category_id: 2, name: 'Diet', icon: 'fa-utensils' },
+            { category_id: 3, name: 'Energy', icon: 'fa-bolt' },
+            { category_id: 4, name: 'Shopping', icon: 'fa-shopping-bag' },
+            { category_id: 5, name: 'Waste', icon: 'fa-recycle' },
+            { category_id: 6, name: 'Water Use', icon: 'fa-tint' },
+            { category_id: 7, name: 'Travel', icon: 'fa-plane' },
+            { category_id: 8, name: 'Work/Office', icon: 'fa-briefcase' },
+            { category_id: 9, name: 'Home', icon: 'fa-home' },
+            { category_id: 10, name: 'Community', icon: 'fa-users' }
+        ];
+        this.allActivities = [];
+        this.init();
+    }
 
-    async function loadReports() {
-      allActivities = await API.getActivitiesByUser(user.id);
-      const tbody = document.querySelector('#reportTable tbody');
+    async init() {
+        await this.checkAuth();
+        this.bindEvents();
+        await this.loadReports();
+    }
 
-      document.getElementById('totalActivities').textContent = allActivities.length;
-      const totalEmissions = allActivities.reduce((sum, a) => sum + a.co2, 0);
-      document.getElementById('totalEmissions').textContent = `${totalEmissions.toFixed(1)} kg`;
-      
-      if (allActivities.length > 0) {
-        const dates = allActivities.map(a => new Date(a.date)).sort((a, b) => a - b);
-        const start = dates[0].toLocaleDateString();
-        const end = dates[dates.length - 1].toLocaleDateString();
-        document.getElementById('timePeriod').textContent = dates[0].getTime() === dates[dates.length - 1].getTime() ? start : `${start} - ${end}`;
+    async checkAuth() {
+        try {
+            const user = Session.getUser();
+            if (!user) {
+                window.location.href = 'index.html';
+                return;
+            }
+        } catch (error) {
+            console.error('Auth check failed:', error);
+            window.location.href = 'index.html';
+        }
+    }
+
+    bindEvents() {
+        // Logout
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                this.logout();
+            });
+        }
+
+        // Search
+        const searchInput = document.getElementById('reportSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                this.filterActivities(e.target.value.toLowerCase());
+            });
+        }
+
+        // Export All
+        const exportBtn = document.getElementById('exportAllBtn');
+        if (exportBtn) {
+            exportBtn.addEventListener('click', () => {
+                this.downloadAllReportsPDF();
+            });
+        }
+    }
+
+    async loadReports() {
+        try {
+            console.log('📥 Loading reports from API...');
+            const activities = await API.getActivities();
+            console.log('✅ Activities loaded:', activities);
+            
+            this.allActivities = activities;
+            this.displayActivities(this.allActivities);
+            this.updateStats(this.allActivities);
+            
+        } catch (error) {
+            console.error('❌ Failed to load reports:', error);
+            this.showMessage('Failed to load reports: ' + error.message, 'error');
+            this.allActivities = [];
+            this.displayActivities([]);
+        }
+    }
+
+    displayActivities(activities) {
+        const container = document.getElementById('activitiesTableBody');
+        const emptyState = document.getElementById('emptyState');
+        const reportTable = document.getElementById('reportTable');
+
+        console.log('🖥️ Displaying activities:', activities);
+
+        if (!activities || activities.length === 0) {
+            console.log('📭 No activities to display');
+            if (emptyState) emptyState.style.display = 'block';
+            if (reportTable) reportTable.style.display = 'none';
+            if (container) container.innerHTML = '';
+            return;
+        }
+
+        if (emptyState) emptyState.style.display = 'none';
+        if (reportTable) reportTable.style.display = '';
+
+        const html = activities.map(activity => {
+            // Safely get category name
+            const category = this.categories.find(cat => cat.category_id === activity.category_id);
+            const categoryName = category?.name || 'Unknown';
+            const categoryIcon = category?.icon || 'fa-circle';
+            
+            // Safely handle dates
+            let displayDate = 'Invalid Date';
+            try {
+                displayDate = new Date(activity.start_date).toLocaleDateString();
+            } catch (e) {
+                console.warn('Invalid date:', activity.start_date);
+                displayDate = activity.start_date || 'Unknown';
+            }
+            
+            // Safely handle numbers
+            const quantity = activity.quantity || 0;
+            const co2 = activity.CO2_result || 0;
+            const unit = activity.unit || '';
+
+            console.log('📝 Rendering activity:', {
+                name: activity.activity_name,
+                category: categoryName,
+                date: displayDate,
+                quantity: quantity,
+                co2: co2
+            });
+
+            return `
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="category-icon">
+                                <i class="fas ${categoryIcon}"></i>
+                            </div>
+                            <div>${activity.activity_name || 'Unnamed Activity'}</div>
+                        </div>
+                    </td>
+                    <td><span class="tag">${categoryName}</span></td>
+                    <td>${displayDate}</td>
+                    <td>${quantity} ${unit}</td>
+                    <td><strong>${co2} kg</strong></td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline" onclick="reportsManager.downloadReportCSV(${activity.activity_id})" title="Download CSV">
+                                <i class="fas fa-file-csv"></i>
+                            </button>
+                            <button class="btn btn-outline" onclick="reportsManager.downloadReportPDF(${activity.activity_id})" title="Download PDF">
+                                <i class="fas fa-file-pdf"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        if (container) {
+            container.innerHTML = html;
+            console.log('✅ Activities table updated with', activities.length, 'items');
+        }
+    }
+
+    updateStats(activities) {
+        console.log('📊 Updating stats with:', activities);
         
-        const days = Math.max(1, (dates[dates.length - 1] - dates[0]) / (1000 * 60 * 60 * 24) + 1);
-        document.getElementById('averageDaily').textContent = `${(totalEmissions / days).toFixed(1)} kg`;
-      }
+        // Total Activities
+        const totalActivitiesEl = document.getElementById('totalActivities');
+        if (totalActivitiesEl) {
+            totalActivitiesEl.textContent = activities.length;
+            console.log('📈 Total activities:', activities.length);
+        }
+        
+        // Total Emissions
+        const totalEmissionsEl = document.getElementById('totalEmissions');
+        if (totalEmissionsEl) {
+            const totalEmissions = activities.reduce((sum, activity) => {
+                return sum + (parseFloat(activity.CO2_result) || 0);
+            }, 0);
+            totalEmissionsEl.textContent = `${totalEmissions.toFixed(1)} kg`;
+            console.log('💨 Total emissions:', totalEmissions);
+        }
+        
+        // Time Period
+        const timePeriodEl = document.getElementById('timePeriod');
+        if (timePeriodEl && activities.length > 0) {
+            try {
+                const dates = activities
+                    .map(a => new Date(a.start_date))
+                    .filter(date => !isNaN(date.getTime()))
+                    .sort((a, b) => a - b);
+                
+                if (dates.length > 0) {
+                    const start = dates[0].toLocaleDateString();
+                    const end = dates[dates.length - 1].toLocaleDateString();
+                    timePeriodEl.textContent = start === end ? start : `${start} - ${end}`;
+                } else {
+                    timePeriodEl.textContent = '-';
+                }
+            } catch (error) {
+                console.error('Error calculating time period:', error);
+                timePeriodEl.textContent = '-';
+            }
+        }
+        
+        // Average Daily
+        const averageDailyEl = document.getElementById('averageDaily');
+        if (averageDailyEl && activities.length > 0) {
+            try {
+                const totalEmissions = activities.reduce((sum, activity) => {
+                    return sum + (parseFloat(activity.CO2_result) || 0);
+                }, 0);
+                
+                const dates = activities
+                    .map(a => new Date(a.start_date))
+                    .filter(date => !isNaN(date.getTime()));
+                
+                if (dates.length > 0) {
+                    const uniqueDays = new Set(dates.map(date => date.toDateString())).size;
+                    const averageDaily = totalEmissions / Math.max(1, uniqueDays);
+                    averageDailyEl.textContent = `${averageDaily.toFixed(1)} kg`;
+                } else {
+                    averageDailyEl.textContent = '0 kg';
+                }
+            } catch (error) {
+                console.error('Error calculating average daily:', error);
+                averageDailyEl.textContent = '0 kg';
+            }
+        }
+    }
 
-      tbody.innerHTML = allActivities.map(a => {
-        const category = MockDB.categories.find(c => c.id === a.category_id)?.name || 'Unknown';
-        return `
-          <tr>
-            <td>
-              <div class="d-flex align-items-center">
-                <div class="category-icon me-2">
-                  <i class="fas ${MockDB.categories.find(c => c.id === a.category_id)?.icon || 'fa-circle'}"></i>
-                </div>
-                <div>${a.name}</div>
-              </div>
-            </td>
-            <td><span class="tag">${category}</span></td>
-            <td>${a.date}</td>
-            <td>${a.quantity} ${a.unit}</td>
-            <td><strong>${a.co2} kg</strong></td>
-            <td>
-              <div class="btn-group btn-group-sm">
-                <button class="btn btn-outline" onclick="downloadReportCSV(${a.id})" title="Download CSV">
-                  <i class="fas fa-file-csv"></i>
-                </button>
-                <button class="btn btn-outline" onclick="downloadReportPDF(${a.id})" title="Download PDF">
-                  <i class="fas fa-file-pdf"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
+    filterActivities(searchTerm) {
+        console.log('🔍 Filtering activities with term:', searchTerm);
+        const filteredActivities = this.allActivities.filter(activity => 
+            activity.activity_name?.toLowerCase().includes(searchTerm) ||
+            (activity.description && activity.description.toLowerCase().includes(searchTerm))
+        );
+        console.log('✅ Filtered to:', filteredActivities.length, 'activities');
+        this.displayActivities(filteredActivities);
+    }
+
+    downloadReportCSV(activityId) {
+        const activity = this.allActivities.find(a => a.activity_id === activityId);
+        if (!activity) {
+            this.showMessage('Activity not found', 'error');
+            return;
+        }
+
+        const category = this.categories.find(c => c.category_id === activity.category_id)?.name || 'Unknown';
+        const content = `Report ID,Activity,Category,Date,Quantity,Unit,Emission (kg CO2e)\n${activity.activity_id},${activity.activity_name},${category},${activity.start_date},${activity.quantity},${activity.unit},${activity.CO2_result}`;
+        
+        this.downloadFile(content, `carbon_report_${activity.activity_id}.csv`, 'text/csv');
+    }
+
+    downloadReportPDF(activityId) {
+        const activity = this.allActivities.find(a => a.activity_id === activityId);
+        if (!activity) {
+            this.showMessage('Activity not found', 'error');
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.setFontSize(18);
+        doc.setTextColor(34, 197, 92);
+        doc.text("CarbonIQ Activity Report", 20, 20);
+
+        doc.setFontSize(11);
+        doc.setTextColor(0);
+        doc.text(`Activity: ${activity.activity_name}`, 20, 40);
+        doc.text(`Category: ${this.categories.find(c => c.category_id === activity.category_id)?.name || 'Unknown'}`, 20, 50);
+        doc.text(`Date: ${activity.start_date}`, 20, 60);
+        doc.text(`Quantity: ${activity.quantity} ${activity.unit}`, 20, 70);
+        doc.text(`Emission: ${activity.CO2_result} kg CO2e`, 20, 80);
+
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text("Generated by CarbonIQ – Sustainable Living Tracker", 20, doc.internal.pageSize.height - 10);
+
+        doc.save(`carbon_report_${activity.activity_id}.pdf`);
+    }
+
+    downloadAllReportsPDF() {
+        if (this.allActivities.length === 0) {
+            this.showMessage('No activities to export', 'error');
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const user = Session.getUser();
+
+        doc.setFontSize(18);
+        doc.setTextColor(34, 197, 92);
+        doc.text("CarbonIQ Complete Report", 20, 20);
+
+        doc.setFontSize(11);
+        doc.setTextColor(0);
+        doc.text(`Generated for: ${user?.first_name || ''} ${user?.last_name || ''}`, 20, 40);
+        doc.text(`Total Activities: ${this.allActivities.length}`, 20, 50);
+        
+        const totalEmissions = this.allActivities.reduce((sum, a) => sum + (parseFloat(a.CO2_result) || 0), 0);
+        doc.text(`Total Emissions: ${totalEmissions.toFixed(1)} kg CO2e`, 20, 60);
+        doc.text(`Report Date: ${new Date().toLocaleDateString()}`, 20, 70);
+
+        const tableData = this.allActivities.map(activity => {
+            const category = this.categories.find(c => c.category_id === activity.category_id)?.name || 'Unknown';
+            return [
+                activity.activity_name || 'Unnamed',
+                category,
+                activity.start_date || 'Unknown',
+                `${activity.quantity || 0} ${activity.unit || ''}`,
+                `${activity.CO2_result || 0} kg`
+            ];
+        });
+
+        doc.autoTable({
+            startY: 80,
+            head: [['Activity', 'Category', 'Date', 'Quantity', 'Emission']],
+            body: tableData,
+            styles: { fontSize: 9 },
+            headStyles: { fillColor: [34, 197, 92] }
+        });
+
+        const finalY = doc.lastAutoTable.finalY + 10;
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text("Generated by CarbonIQ – Track, learn, and reduce your footprint", 20, finalY);
+
+        doc.save(`carbon_complete_report_${user?.username || 'user'}.pdf`);
+    }
+
+    downloadFile(content, filename, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(url);
+    }
+
+    async logout() {
+        try {
+            await API.logout();
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
+            Session.clear();
+            window.location.href = 'index.html';
+        }
+    }
+
+    showMessage(message, type = 'info') {
+        // Remove any existing alerts first
+        const existingAlerts = document.querySelectorAll('.alert');
+        existingAlerts.forEach(alert => alert.remove());
+        
+        // Create alert element
+        const alertEl = document.createElement('div');
+        alertEl.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'} alert-dismissible fade show`;
+        alertEl.innerHTML = `
+          ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         `;
-      }).join('');
 
-      rowsCache = Array.from(tbody.querySelectorAll('tr'));
-      document.getElementById('emptyState').style.display = allActivities.length ? 'none' : 'block';
-      document.getElementById('reportTable').style.display = allActivities.length ? '' : 'none';
+        // Add to page
+        const main = document.querySelector('main');
+        if (main) {
+            main.insertBefore(alertEl, main.firstChild);
+        }
+
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            if (alertEl.parentNode) {
+                alertEl.remove();
+            }
+        }, 5000);
     }
+}
 
-    document.getElementById('reportSearch').addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase();
-      let visible = 0;
-      rowsCache.forEach(tr => {
-        const match = tr.innerText.toLowerCase().includes(q);
-        tr.style.display = match ? '' : 'none';
-        if (match) visible++;
-      });
-      document.getElementById('emptyState').style.display = visible ? 'none' : 'block';
-      document.getElementById('reportTable').style.display = visible ? '' : 'none';
+    // Initialize reports manager when DOM is loaded
+    document.addEventListener('DOMContentLoaded', async function() {
+      const user = await requireAuth();
+      if (user) {
+        window.reportsManager = new ReportsManager();
+      }
     });
-
-    function downloadReportCSV(activityId) {
-      const a = MockDB.activities.find(act => act.id === activityId);
-      const category = MockDB.categories.find(c => c.id === a.category_id)?.name || 'Unknown';
-
-      const content = `Report ID,Activity,Category,Date,Quantity,Unit,Emission (kg CO2e)\n${a.id},${a.name},${category},${a.date},${a.quantity},${a.unit},${a.co2}`;
-      const blob = new Blob([content], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `carbon_report_${a.id}.csv`;
-      link.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function downloadReportPDF(activityId) {
-      const act = MockDB.activities.find(a => a.id === activityId);
-      const category = MockDB.categories.find(c => c.id === act.category_id)?.name || 'Unknown';
-
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-
-      doc.setFontSize(18);
-      doc.setTextColor(34, 197, 92);
-      doc.text("CarbonIQ Activity Report", 20, 20);
-
-      doc.setFontSize(11);
-      doc.setTextColor(0);
-      doc.text(`Activity: ${act.name}`, 20, 40);
-      doc.text(`Category: ${category}`, 20, 50);
-      doc.text(`Date: ${act.date}`, 20, 60);
-      doc.text(`Quantity: ${act.quantity} ${act.unit}`, 20, 70);
-      doc.text(`Emission: ${act.co2} kg CO2e`, 20, 80);
-
-      doc.setFontSize(10);
-      doc.setTextColor(100);
-      doc.text("Generated by CarbonIQ – Sustainable Living Tracker", 20, doc.internal.pageSize.height - 10);
-
-      doc.save(`carbon_report_${act.id}.pdf`);
-    }
-
-    function downloadAllReportsPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-
-      doc.setFontSize(18);
-      doc.setTextColor(34, 197, 92);
-      doc.text("CarbonIQ Complete Report", 20, 20);
-
-      doc.setFontSize(11);
-      doc.setTextColor(0);
-      doc.text(`Generated for: ${user.name}`, 20, 40);
-      doc.text(`Total Activities: ${allActivities.length}`, 20, 50);
-      const totalEmissions = allActivities.reduce((sum, a) => sum + a.co2, 0);
-      doc.text(`Total Emissions: ${totalEmissions.toFixed(1)} kg CO2e`, 20, 60);
-      doc.text(`Report Date: ${new Date().toLocaleDateString()}`, 20, 70);
-
-      const tableData = allActivities.map(a => {
-        const category = MockDB.categories.find(c => c.id === a.category_id)?.name || 'Unknown';
-        return [a.name, category, a.date, `${a.quantity} ${a.unit}`, `${a.co2} kg`];
-      });
-
-      doc.autoTable({
-        startY: 80,
-        head: [['Activity', 'Category', 'Date', 'Quantity', 'Emission']],
-        body: tableData,
-        styles: { fontSize: 9 },
-        headStyles: { fillColor: [34, 197, 92] }
-      });
-
-      const finalY = doc.lastAutoTable.finalY + 10;
-      doc.setFontSize(10);
-      doc.setTextColor(100);
-      doc.text("Generated by CarbonIQ – Track, learn, and reduce your footprint", 20, finalY);
-
-      doc.save(`carbon_complete_report_${user.username}.pdf`);
-    }
-
-    loadReports();
   </script>
 </body>
 </html>

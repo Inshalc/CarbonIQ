@@ -252,21 +252,22 @@ class ActivitiesManager {
         }
     }
 
-    async loadActivities() {
-        try {
-            const user = Session.getUser();
-            if (!user) return;
-
-            const activities = await API.getActivitiesByUser(user.id);
-            this.allActivities = activities; // Store for filtering
-            this.displayFilteredActivities(activities);
-        } catch (error) {
-            console.error('Failed to load activities:', error);
-            this.showMessage('Failed to load activities', 'error');
-        }
+        async loadActivities() {
+    try {
+        console.log('Loading activities from API...');
+        const activities = await API.getActivities();
+        console.log('Activities loaded:', activities);
+        this.allActivities = activities;
+        this.displayFilteredActivities(activities);
+    } catch (error) {
+        console.error('Failed to load activities:', error);
+        this.showMessage('Failed to load activities. Please try again.', 'error');
+        this.allActivities = [];
+        this.displayFilteredActivities([]);
     }
-
-    filterActivities() {
+}
+        
+        filterActivities() {
         const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
         const categoryFilter = document.getElementById('categoryFilter')?.value || '';
         const dateFilter = document.getElementById('dateFilter')?.value || 'all';

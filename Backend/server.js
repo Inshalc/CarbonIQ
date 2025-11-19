@@ -18,9 +18,10 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-  origin: false, // Same origin since we're serving static files
+  origin: process.env.FRONTEND_URL || `http://localhost:${PORT}`,
   credentials: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

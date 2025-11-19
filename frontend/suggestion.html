@@ -7,9 +7,9 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/theme.css">
+  <link href="css/theme.css" rel="stylesheet">
 
-<style>
+  <style>
     :root {
       --bg: #f8faf9;
       --surface: #ffffff;
@@ -268,17 +268,17 @@
     <div class="row">
       <div class="col-lg-8">
         <h2 class="page-title mb-4">Tips & Suggestions</h2>
-        <p class="subtext mb-4">Personalized recommendations to help you reduce your carbon footprint based on your activities.</p>
+        <p class="subtitle mb-4">Personalized recommendations to help you reduce your carbon footprint based on your activities.</p>
 
         <div class="card compact-card mb-4">
           <div class="d-flex align-items-center justify-content-between">
             <div>
               <h5 class="card-title mb-1">Your Carbon Footprint Grade</h5>
-              <p class="subtext mb-0" id="gradeDescriptionText">Your current grade is A - Excellent</p>
+              <p class="subtext mb-0" id="gradeDescriptionText">Calculating your carbon grade...</p>
             </div>
             <div class="text-center">
-              <div class="compact-grade-badge grade-a mb-1" id="suggestionGradeBadge">A</div>
-              <small id="gradeTips" class="subtext">Excellent! Maintain your sustainable habits.</small>
+              <div class="compact-grade-badge grade-b mb-1" id="suggestionGradeBadge">-</div>
+              <small id="gradeTips" class="subtext">Loading your grade...</small>
             </div>
           </div>
         </div>
@@ -297,7 +297,12 @@
           </div>
           <h5 class="card-title">Personalized Suggestions</h5>
           <p class="subtext mb-3">Recommendations tailored to your specific activities and high-emission categories.</p>
-          <div id="personalizedTips"></div>
+          <div id="personalizedTips">
+            <div class="text-center py-4">
+              <i class="fas fa-spinner fa-spin fa-2x mb-3" style="color: var(--muted);"></i><br>
+              <span class="subtext">Loading personalized suggestions...</span>
+            </div>
+          </div>
         </div>
 
         <div class="card p-4">
@@ -308,6 +313,10 @@
           <p class="subtext mb-3">Browse suggestions organized by emission categories.</p>
           
           <div class="accordion" id="tipsAccordion">
+            <div class="text-center py-4">
+              <i class="fas fa-spinner fa-spin fa-2x mb-3" style="color: var(--muted);"></i><br>
+              <span class="subtext">Loading tips...</span>
+            </div>
           </div>
         </div>
       </div>
@@ -318,7 +327,11 @@
             <i class="fas fa-chart-pie"></i>
           </div>
           <h5 class="card-title">Your Impact</h5>
-          <div id="impactStats" class="impact-stats mb-3"></div>
+          <div id="impactStats" class="impact-stats mb-3">
+            <div class="text-center py-2">
+              <i class="fas fa-spinner fa-spin"></i> Loading impact data...
+            </div>
+          </div>
           <button class="btn btn-outline w-100" onclick="location.href='activity.html'">
             <i class="fas fa-plus me-2"></i>Add More Activities
           </button>
@@ -330,6 +343,9 @@
           </div>
           <h5 class="card-title">Your Top Emission Categories</h5>
           <div id="topCategories" class="impact-stats">
+            <div class="text-center py-2">
+              <i class="fas fa-spinner fa-spin"></i> Loading categories...
+            </div>
           </div>
         </div>
 
@@ -357,133 +373,135 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/app.js"></script>
-  <script src="js/api-config.js"></script>
   <script>
-    const user = requireAuth();
+    class SuggestionsManager {
+      constructor() {
+        this.categories = [
+          { category_id: 1, name: 'Transportation', icon: 'fa-car' },
+          { category_id: 2, name: 'Diet', icon: 'fa-utensils' },
+          { category_id: 3, name: 'Energy', icon: 'fa-bolt' },
+          { category_id: 4, name: 'Shopping', icon: 'fa-shopping-bag' },
+          { category_id: 5, name: 'Waste', icon: 'fa-recycle' },
+          { category_id: 6, name: 'Water Use', icon: 'fa-tint' },
+          { category_id: 7, name: 'Travel', icon: 'fa-plane' },
+          { category_id: 8, name: 'Work/Office', icon: 'fa-briefcase' },
+          { category_id: 9, name: 'Home', icon: 'fa-home' },
+          { category_id: 10, name: 'Community', icon: 'fa-users' }
+        ];
+        
+        this.extendedTips = [
+          { id: 1, category_id: 1, title: 'Use Public Transport', description: 'Try taking the bus or train instead of driving to reduce emissions by up to 50%.', level: 'high' },
+          { id: 2, category_id: 1, title: 'Carpool', description: 'Share rides with colleagues or friends to cut transportation emissions.', level: 'medium' },
+          { id: 3, category_id: 1, title: 'Walk or Bike', description: 'For short distances, consider walking or biking instead of driving.', level: 'medium' },
+          { id: 4, category_id: 2, title: 'Plant-Based Meals', description: 'Try incorporating more plant-based meals to significantly reduce dietary emissions.', level: 'high' },
+          { id: 5, category_id: 2, title: 'Local Produce', description: 'Buy local and seasonal foods to reduce transportation emissions.', level: 'medium' },
+          { id: 6, category_id: 2, title: 'Reduce Food Waste', description: 'Plan meals and store food properly to minimize waste.', level: 'low' },
+          { id: 7, category_id: 3, title: 'Energy Efficient Appliances', description: 'Use energy-efficient appliances and turn them off when not in use.', level: 'high' },
+          { id: 8, category_id: 3, title: 'LED Lighting', description: 'Switch to LED bulbs which use 75% less energy.', level: 'medium' },
+          { id: 9, category_id: 3, title: 'Smart Thermostat', description: 'Use a programmable thermostat to optimize heating and cooling.', level: 'medium' },
+          { id: 10, category_id: 4, title: 'Buy Second-Hand', description: 'Purchase used items to reduce manufacturing emissions.', level: 'medium' },
+          { id: 11, category_id: 4, title: 'Quality Over Quantity', description: 'Invest in durable products that last longer.', level: 'low' },
+          { id: 12, category_id: 5, title: 'Recycle Properly', description: 'Separate recyclables and follow local recycling guidelines.', level: 'medium' },
+          { id: 13, category_id: 5, title: 'Compost Food Scraps', description: 'Start composting to reduce landfill waste.', level: 'low' },
+          { id: 14, category_id: 6, title: 'Shorter Showers', description: 'Reduce shower time to save water and energy.', level: 'medium' },
+          { id: 15, category_id: 6, title: 'Fix Leaks', description: 'Repair leaky faucets to prevent water waste.', level: 'low' }
+        ];
+        
+        this.init();
+      }
 
-    function handleAPIError(error, context = '') {
-        console.error(`Error in ${context}:`, error);
-        showAlert(`Failed to ${context}. Please try again.`, 'error');
-    }
+      async init() {
+        console.log('🚀 Initializing suggestions page...');
+        await this.checkAuth();
+        await this.loadSuggestionsData();
+      }
 
-    function showAlert(message, type) {
-        const existingAlerts = document.querySelectorAll('.alert');
-        existingAlerts.forEach(alert => alert.remove());
-        
-        const alert = document.createElement('div');
-        alert.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show`;
-        alert.innerHTML = `
-          ${message}
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
-        
-        document.querySelector('main').insertBefore(alert, document.querySelector('.container > .row'));
-        
-        setTimeout(() => {
-          if (alert.parentNode) {
-            alert.remove();
+      async checkAuth() {
+        try {
+          const user = await requireAuth();
+          if (user) {
+            console.log('✅ User authenticated:', user);
           }
-        }, 3000);
-    }
-
-    const extendedTips = [
-      { id: 1, category_id: 1, text: 'Use public transport instead of driving', level: 'high' },
-      { id: 2, category_id: 1, text: 'Consider electric vehicles for your next car', level: 'high' },
-      { id: 3, category_id: 1, text: 'Carpool with colleagues or neighbors', level: 'medium' },
-      { id: 4, category_id: 1, text: 'Walk or bike for short distances under 2km', level: 'medium' },
-      { id: 5, category_id: 1, text: 'Maintain proper tire pressure for better fuel efficiency', level: 'low' },
-      { id: 6, category_id: 1, text: 'Combine multiple errands into one trip', level: 'low' },
-      { id: 7, category_id: 2, text: 'Try a plant-based meal', level: 'high' },
-      { id: 8, category_id: 2, text: 'Reduce beef consumption by 50%', level: 'high' },
-      { id: 9, category_id: 2, text: 'Choose local and seasonal produce', level: 'medium' },
-      { id: 10, category_id: 2, text: 'Plan meals to reduce food waste', level: 'medium' },
-      { id: 11, category_id: 2, text: 'Grow your own herbs or vegetables', level: 'low' },
-      { id: 12, category_id: 2, text: 'Compost food scraps instead of throwing away', level: 'low' },
-      { id: 13, category_id: 3, text: 'Switch off unused lights', level: 'medium' },
-      { id: 14, category_id: 3, text: 'Install solar panels for renewable energy', level: 'high' },
-      { id: 15, category_id: 3, text: 'Use smart thermostat to optimize heating/cooling', level: 'high' },
-      { id: 16, category_id: 3, text: 'Switch to LED bulbs throughout your home', level: 'medium' },
-      { id: 17, category_id: 3, text: 'Unplug electronics when not in use', level: 'low' },
-      { id: 18, category_id: 3, text: 'Use natural light during daytime', level: 'low' },
-      { id: 19, category_id: 4, text: 'Buy local produce to reduce transport emissions', level: 'medium' },
-      { id: 20, category_id: 4, text: 'Choose products with minimal packaging', level: 'medium' },
-      { id: 21, category_id: 4, text: 'Buy second-hand items when possible', level: 'low' },
-      { id: 22, category_id: 4, text: 'Support companies with sustainable practices', level: 'low' },
-      { id: 23, category_id: 4, text: 'Avoid impulse purchases and plan shopping', level: 'low' },
-      { id: 24, category_id: 5, text: 'Recycle plastics and paper', level: 'medium' },
-      { id: 25, category_id: 5, text: 'Compost organic waste for garden use', level: 'medium' },
-      { id: 26, category_id: 5, text: 'Use reusable bags instead of plastic', level: 'low' },
-      { id: 27, category_id: 5, text: 'Repair items instead of replacing them', level: 'low' },
-      { id: 28, category_id: 5, text: 'Donate unused items instead of discarding', level: 'low' },
-      { id: 29, category_id: 6, text: 'Take shorter showers', level: 'medium' },
-      { id: 30, category_id: 6, text: 'Install water-efficient showerheads', level: 'medium' },
-      { id: 31, category_id: 6, text: 'Fix leaking taps promptly', level: 'low' },
-      { id: 32, category_id: 6, text: 'Collect rainwater for gardening', level: 'low' },
-      { id: 33, category_id: 6, text: 'Turn off tap while brushing teeth', level: 'low' },
-      { id: 34, category_id: 7, text: 'Choose direct flights to reduce emissions', level: 'high' },
-      { id: 35, category_id: 7, text: 'Offset flight emissions when traveling', level: 'medium' },
-      { id: 36, category_id: 7, text: 'Pack light to reduce aircraft weight', level: 'low' },
-      { id: 37, category_id: 7, text: 'Use video calls instead of business travel', level: 'medium' },
-      { id: 38, category_id: 7, text: 'Choose eco-friendly accommodations', level: 'low' },
-      { id: 39, category_id: 8, text: 'Use video conferencing instead of commuting', level: 'high' },
-      { id: 40, category_id: 8, text: 'Implement paperless office practices', level: 'medium' },
-      { id: 41, category_id: 8, text: 'Use energy-efficient office equipment', level: 'medium' },
-      { id: 42, category_id: 8, text: 'Set up recycling stations in office', level: 'low' },
-      { id: 43, category_id: 8, text: 'Use stairs instead of elevator for 1-2 floors', level: 'low' },
-      { id: 44, category_id: 9, text: 'Improve home insulation to reduce heating needs', level: 'high' },
-      { id: 45, category_id: 9, text: 'Use energy-efficient appliances', level: 'medium' },
-      { id: 46, category_id: 9, text: 'Hang clothes to dry instead of using dryer', level: 'medium' },
-      { id: 47, category_id: 9, text: 'Plant trees for natural shade and cooling', level: 'low' },
-      { id: 48, category_id: 9, text: 'Use ceiling fans instead of AC when possible', level: 'low' },
-      { id: 49, category_id: 10, text: 'Participate in local environmental initiatives', level: 'medium' },
-      { id: 50, category_id: 10, text: 'Support community gardens and local food', level: 'medium' },
-      { id: 51, category_id: 10, text: 'Educate others about carbon reduction', level: 'low' },
-      { id: 52, category_id: 10, text: 'Join or start a carpool group', level: 'low' },
-      { id: 53, category_id: 10, text: 'Volunteer for local clean-up events', level: 'low' }
-    ];
-
-    function getUserHighEmissionCategories(activities) {
-      const categoryEmissions = {};
-      
-      activities.forEach(activity => {
-        if (!categoryEmissions[activity.category_id]) {
-          categoryEmissions[activity.category_id] = 0;
+        } catch (error) {
+          console.error('Auth check failed:', error);
+          window.location.href = 'index.html';
         }
-        categoryEmissions[activity.category_id] += activity.co2;
-      });
-      
-      return Object.entries(categoryEmissions)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 3)
-        .map(([categoryId]) => parseInt(categoryId));
-    }
+      }
 
-    function getPersonalizedTipsForUser(activities) {
-      const highEmissionCategories = getUserHighEmissionCategories(activities);
-      
-      const highPriorityTips = extendedTips.filter(tip => 
-        highEmissionCategories.includes(tip.category_id) && tip.level === 'high'
-      );
-      
-      const mediumPriorityTips = extendedTips.filter(tip => 
-        highEmissionCategories.includes(tip.category_id) && tip.level === 'medium'
-      );
-      
-      const generalHighTips = extendedTips.filter(tip => 
-        !highEmissionCategories.includes(tip.category_id) && tip.level === 'high'
-      ).slice(0, 2);
-      
-      return [...highPriorityTips, ...mediumPriorityTips, ...generalHighTips].slice(0, 6);
-    }
+      async loadSuggestionsData() {
+        try {
+          console.log('📥 Loading suggestions data...');
+          
+          // Load data in parallel
+          const [activities, suggestionsData] = await Promise.all([
+            this.safeLoad(() => API.getActivities(), 'activities', []),
+            this.safeLoad(() => API.getSuggestions(), 'suggestions', { suggestions: [] })
+          ]);
 
-    (async function init() {
-      try {
-        const gradeInfo = await API.getUserGrade(user.id);
+          console.log('📦 Loaded data:', {
+            activities: activities.length,
+            suggestions: suggestionsData.suggestions?.length || 0
+          });
+
+          this.calculateAndDisplayGrade(activities);
+          this.displayPersonalizedSuggestions(suggestionsData.suggestions || []);
+          this.displayAllTipsByCategory();
+          this.displayImpactStats(activities);
+          this.displayTopCategories(activities);
+
+        } catch (error) {
+          console.error('❌ Failed to load suggestions data:', error);
+          this.showError('Failed to load suggestions: ' + error.message);
+        }
+      }
+
+      async safeLoad(apiCall, name, defaultValue) {
+        try {
+          console.log(`📥 Loading ${name}...`);
+          const result = await apiCall();
+          console.log(`✅ ${name} loaded:`, result);
+          return result;
+        } catch (error) {
+          console.error(`❌ Failed to load ${name}:`, error);
+          return defaultValue;
+        }
+      }
+
+      calculateAndDisplayGrade(activities) {
+        console.log('📊 Calculating carbon grade...');
+        
+        const totalEmissions = activities.reduce((sum, activity) => 
+          sum + (parseFloat(activity.CO2_result) || 0), 0
+        );
+        
+        // Simple grading logic based on total emissions
+        let grade, description;
+        if (totalEmissions === 0) {
+          grade = 'A';
+          description = 'No emissions recorded yet';
+        } else if (totalEmissions < 10) {
+          grade = 'A';
+          description = 'Excellent! Very low emissions';
+        } else if (totalEmissions < 25) {
+          grade = 'B';
+          description = 'Good! Below average emissions';
+        } else if (totalEmissions < 50) {
+          grade = 'C';
+          description = 'Average emissions';
+        } else if (totalEmissions < 100) {
+          grade = 'D';
+          description = 'High emissions - needs improvement';
+        } else {
+          grade = 'F';
+          description = 'Very high emissions - take action';
+        }
+
         const gradeBadge = document.getElementById('suggestionGradeBadge');
-        gradeBadge.className = `compact-grade-badge grade-${gradeInfo.grade.toLowerCase()}`;
-        gradeBadge.textContent = gradeInfo.grade;
+        gradeBadge.className = `compact-grade-badge grade-${grade.toLowerCase()}`;
+        gradeBadge.textContent = grade;
+        
         document.getElementById('gradeDescriptionText').textContent = 
-          `Your current grade is ${gradeInfo.grade} - ${gradeInfo.description}`;
+          `Your current grade is ${grade} - ${description}`;
         
         const gradeTips = {
           'A': 'Excellent! Maintain your sustainable habits.',
@@ -492,48 +510,47 @@
           'D': 'Needs improvement. Implement our top suggestions.',
           'F': 'Critical. Take immediate action on recommendations.'
         };
-        document.getElementById('gradeTips').textContent = gradeTips[gradeInfo.grade];
+        document.getElementById('gradeTips').textContent = gradeTips[grade] || 'Add activities to get a grade.';
+      }
 
-        const activities = await API.getActivitiesByUser(user.id);
-        const highEmissionCategories = getUserHighEmissionCategories(activities);
-        const personalizedTips = getPersonalizedTipsForUser(activities);
-
-        if (highEmissionCategories.length > 0) {
-          const highEmissionWarning = document.getElementById('highEmissionWarning');
-          const highEmissionText = document.getElementById('highEmissionText');
-          
-          const categoryNames = highEmissionCategories.map(catId => {
-            const category = MockDB.categories.find(c => c.id === catId);
-            return category ? category.name : 'Unknown';
-          }).join(', ');
-          
-          highEmissionText.textContent = `Your highest emissions come from: ${categoryNames}. Focus on these areas for maximum impact.`;
-          highEmissionWarning.style.display = 'block';
-        }
-
-        document.getElementById('personalizedTips').innerHTML = 
-          personalizedTips.length > 0 ? 
-          personalizedTips.map(tip => {
-            const category = MockDB.categories.find(c => c.id === tip.category_id);
+      displayPersonalizedSuggestions(suggestions) {
+        const container = document.getElementById('personalizedTips');
+        
+        if (suggestions.length === 0) {
+          // Use extended tips as fallback
+          const fallbackSuggestions = this.extendedTips.slice(0, 5);
+          container.innerHTML = fallbackSuggestions.map(suggestion => {
+            const category = this.categories.find(c => c.category_id === suggestion.category_id);
             return `
               <div class="suggestion-item">
                 <div class="d-flex justify-content-between align-items-start mb-1">
-                  <span class="tag">${category.name}</span>
-                  <span class="tip-level level-${tip.level}">${tip.level} priority</span>
+                  <span class="tag">${category?.name || 'General'}</span>
+                  <span class="tip-level level-${suggestion.level}">${suggestion.level} priority</span>
                 </div>
-                <div class="subtext">${tip.text}</div>
+                <h6 class="mb-1">${suggestion.title}</h6>
+                <div class="subtext">${suggestion.description}</div>
               </div>
             `;
-          }).join('') :
-          '<div class="text-center py-4">' +
-            '<i class="fas fa-clipboard-list fa-2x mb-3" style="color: var(--muted);"></i><br>' +
-            '<span class="subtext">Add more activities to get personalized suggestions.</span>' +
-          '</div>';
+          }).join('');
+        } else {
+          container.innerHTML = suggestions.map(suggestion => `
+            <div class="suggestion-item">
+              <div class="d-flex justify-content-between align-items-start mb-1">
+                <span class="tag">Suggestion</span>
+                <span class="tip-level level-high">high priority</span>
+              </div>
+              <h6 class="mb-1">${suggestion.title}</h6>
+              <div class="subtext">${suggestion.description}</div>
+            </div>
+          `).join('');
+        }
+      }
 
+      displayAllTipsByCategory() {
         const accordion = document.getElementById('tipsAccordion');
         
         const tipsByCategory = {};
-        extendedTips.forEach(tip => {
+        this.extendedTips.forEach(tip => {
           if (!tipsByCategory[tip.category_id]) {
             tipsByCategory[tip.category_id] = [];
           }
@@ -542,72 +559,133 @@
 
         let accordionHTML = '';
         Object.keys(tipsByCategory).forEach((categoryId) => {
-          const category = MockDB.categories.find(c => c.id === parseInt(categoryId));
+          const category = this.categories.find(c => c.category_id === parseInt(categoryId));
           const tips = tipsByCategory[categoryId];
           
-          accordionHTML += `
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" 
-                        data-bs-toggle="collapse" data-bs-target="#collapse${categoryId}">
-                  <i class="fas ${category.icon} me-2"></i>${category.name}
-                  <span class="badge bg-secondary ms-2">${tips.length}</span>
-                </button>
-              </h2>
-              <div id="collapse${categoryId}" class="accordion-collapse collapse" 
-                   data-bs-parent="#tipsAccordion">
-                <div class="accordion-body">
-                  ${tips.map(tip => `
-                    <div class="suggestion-item mb-3">
-                      <span class="tip-level level-${tip.level} me-2">${tip.level}</span>
-                      <span class="subtext">${tip.text}</span>
-                    </div>
-                  `).join('')}
+          if (category && tips.length > 0) {
+            accordionHTML += `
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" 
+                          data-bs-toggle="collapse" data-bs-target="#collapse${categoryId}">
+                    <i class="fas ${category.icon} me-2"></i>${category.name}
+                    <span class="badge bg-secondary ms-2">${tips.length}</span>
+                  </button>
+                </h2>
+                <div id="collapse${categoryId}" class="accordion-collapse collapse" 
+                     data-bs-parent="#tipsAccordion">
+                  <div class="accordion-body">
+                    ${tips.map(tip => `
+                      <div class="suggestion-item mb-3">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                          <h6 class="mb-0">${tip.title}</h6>
+                          <span class="tip-level level-${tip.level}">${tip.level}</span>
+                        </div>
+                        <p class="subtext mb-0">${tip.description}</p>
+                      </div>
+                    `).join('')}
+                  </div>
                 </div>
               </div>
-            </div>
-          `;
+            `;
+          }
         });
         
-        accordion.innerHTML = accordionHTML;
+        accordion.innerHTML = accordionHTML || '<div class="text-center py-4 subtext">No tips available</div>';
+      }
 
-        const totalEmissions = activities.reduce((sum, a) => sum + a.co2, 0);
+      displayImpactStats(activities) {
+        const container = document.getElementById('impactStats');
+        
+        const totalEmissions = activities.reduce((sum, activity) => 
+          sum + (parseFloat(activity.CO2_result) || 0), 0
+        );
         const activityCount = activities.length;
         
-        document.getElementById('impactStats').innerHTML = `
+        container.innerHTML = `
           <div class="d-flex justify-content-between mb-2">
             <span>Activities Logged:</span>
             <strong>${activityCount}</strong>
           </div>
           <div class="d-flex justify-content-between mb-2">
             <span>Total Emissions:</span>
-            <strong>${totalEmissions.toFixed(1)} kg</strong>
+            <strong>${totalEmissions.toFixed(1)} kg CO₂</strong>
           </div>
           <div class="d-flex justify-content-between">
             <span>Average per Activity:</span>
             <strong>${activityCount > 0 ? (totalEmissions / activityCount).toFixed(1) : 0} kg</strong>
           </div>
         `;
+      }
 
-        const topCategories = getUserHighEmissionCategories(activities);
-        document.getElementById('topCategories').innerHTML = topCategories.map(catId => {
-          const category = MockDB.categories.find(c => c.id === catId);
-          const categoryEmission = activities
-            .filter(a => a.category_id === catId)
-            .reduce((sum, a) => sum + a.co2, 0);
+      displayTopCategories(activities) {
+        const container = document.getElementById('topCategories');
+        
+        const categoryEmissions = {};
+        activities.forEach(activity => {
+          const categoryId = activity.category_id;
+          const emission = parseFloat(activity.CO2_result) || 0;
           
+          if (!categoryEmissions[categoryId]) {
+            categoryEmissions[categoryId] = 0;
+          }
+          categoryEmissions[categoryId] += emission;
+        });
+        
+        const topCategories = Object.entries(categoryEmissions)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 3);
+
+        if (topCategories.length === 0) {
+          container.innerHTML = '<div class="text-center py-2 subtext">No activity data yet</div>';
+          return;
+        }
+
+        // Show high emission warning if any category has significant emissions
+        const highEmissionThreshold = 10; // kg
+        const highEmissionCategories = topCategories.filter(([_, emission]) => emission > highEmissionThreshold);
+        
+        if (highEmissionCategories.length > 0) {
+          const highEmissionWarning = document.getElementById('highEmissionWarning');
+          const highEmissionText = document.getElementById('highEmissionText');
+          
+          const categoryNames = highEmissionCategories.map(([categoryId]) => {
+            const category = this.categories.find(c => c.category_id === parseInt(categoryId));
+            return category ? category.name : 'Unknown';
+          }).join(', ');
+          
+          highEmissionText.textContent = `Your highest emissions come from: ${categoryNames}. Focus on these areas for maximum impact.`;
+          highEmissionWarning.style.display = 'block';
+        }
+
+        container.innerHTML = topCategories.map(([categoryId, emission]) => {
+          const category = this.categories.find(c => c.category_id === parseInt(categoryId));
           return `
             <div class="d-flex justify-content-between mb-2">
-              <span>${category.name}:</span>
-              <strong>${categoryEmission.toFixed(1)} kg</strong>
+              <span><i class="fas ${category?.icon || 'fa-circle'} me-2"></i>${category?.name || 'Unknown'}:</span>
+              <strong>${emission.toFixed(1)} kg</strong>
             </div>
           `;
-        }).join('') || '<div class="text-center py-2 subtext">No activity data yet</div>';
-
-      } catch (error) {
-        handleAPIError(error, 'load suggestions');
+        }).join('');
       }
-    })();
+
+      showError(message) {
+        console.error('Suggestions error:', message);
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+        alertDiv.innerHTML = `
+          ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.querySelector('main').prepend(alertDiv);
+      }
+    }
+
+    // Initialize suggestions manager when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('🏠 DOM loaded, initializing suggestions...');
+      window.suggestionsManager = new SuggestionsManager();
+    });
   </script>
 </body>
 </html>
