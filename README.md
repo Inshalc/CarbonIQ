@@ -1,4 +1,4 @@
-# CarbonIQ 🌱
+# 🌱 CarbonIQ 
 
 A personal carbon footprint tracker that helps you monitor, analyze, and reduce your environmental impact through data-driven insights and actionable suggestions.
 
@@ -27,9 +27,6 @@ A personal carbon footprint tracker that helps you monitor, analyze, and reduce 
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- Web server for local development (included in setup)
 
 ### Installation
 
@@ -37,3 +34,45 @@ A personal carbon footprint tracker that helps you monitor, analyze, and reduce 
    ```bash
    git clone https://github.com/yourusername/carbon-iq.git
    cd carbon-iq
+
+
+
+
+
+
+
+##**🔧 Technologies Used**
+
+Backend
+
+Node.js
+
+Express.js
+
+MySQL
+
+Bcrypt
+
+OpenWeather API
+
+Frontend
+
+HTML
+
+CSS
+
+JavaScript
+
+Bootstrap
+
+Chart.js
+
+Fetch API / AJAX
+
+Tools
+
+Postman
+
+VSCode
+
+Git & GitHub
