@@ -106,10 +106,7 @@ CarbonIQ uses a **3-tier architecture**:
 - Chart.js  
 - Fetch API / AJAX  
 
-### **Tools**
-- Postman  
-- VSCode  
-- Git & GitHub  
+
 
 ---
 
